@@ -1,6 +1,13 @@
 # Applepay
 
 
+`client-id=ARA8_mK0Mhv1tRWQm5RKgHLTTSWk-dBvnot-iNTdxkTJ1TebmXQjxJpljoZ4fSQBJrDNj1DW8lPL4pmD`
+
+`merchant-id=BT6E78NTFJL64`
+
+not working :(
+
+
 See a [hosted version](https://applepay-paypal-js-sdk.herokuapp.com) of the sample
 
 
