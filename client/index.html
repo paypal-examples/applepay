@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Applepay Example</title>
+    <link href="./styles.css" rel="stylesheet" />
+
   </head>
   <body>
   
@@ -12,9 +14,16 @@
 
     <div id="applepay-btn"></div>
 
+    <h3>Mobile</h3>
     <script
       src="https://www.paypal.com/sdk/js?client-id=ARA8_mK0Mhv1tRWQm5RKgHLTTSWk-dBvnot-iNTdxkTJ1TebmXQjxJpljoZ4fSQBJrDNj1DW8lPL4pmD&components=buttons&merchant-id=BT6E78NTFJL64&debug=true"
       data-partner-attribution-id="APPLEPAY"
+    ></script>
+
+    <script
+      src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"
+      integrity="sha384-3zSEDfvllQohrq0PHL1fOXJuC/jSOO34H46t6UQfobFOmxE5BpjjaIJY5F2/bMnU"
+      crossorigin="anonymous"
     ></script>
 
     <script>
@@ -22,6 +31,21 @@
         document.getElementById("applepay-btn").innerText =
           "you must be on safari";
       }
+    </script>
+    
+    <script>
+      let el = document.createElement("div");
+      el.setAttribute("id", "qrcode");
+      document.body.appendChild(el);
+
+      const qrCode = new QRCode("qrcode", {
+        text: window.location.href,
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H,
+      });
     </script>
 
     <script src="./index.js"></script>
