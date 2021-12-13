@@ -1,11 +1,11 @@
 # Applepay
 
 
-`client-id=ARA8_mK0Mhv1tRWQm5RKgHLTTSWk-dBvnot-iNTdxkTJ1TebmXQjxJpljoZ4fSQBJrDNj1DW8lPL4pmD`
+`client-id=AZxSR8Zv4SOvF2dFSzL4mOC09tJySDtBlOmrHVQ9YjXuXlAyNWlhptTUD6seQNFfCYU38hE9_9jvtdCq`
 
-`merchant-id=BT6E78NTFJL64`
+`merchant-id=XWVWZ4HG4YH9N`
 
-not working :(
+not working :( merhantDomain need registering 
 
 
 See a [hosted version](https://applepay-paypal-js-sdk.herokuapp.com) of the sample
