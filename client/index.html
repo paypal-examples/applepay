@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Applepay Example</title>
+  </head>
+  <body>
+  
+    <div id="applepay-mark"></div>
+
+    <div id="applepay-btn"></div>
+
+    <script
+      src="https://www.paypal.com/sdk/js?client-id=ARA8_mK0Mhv1tRWQm5RKgHLTTSWk-dBvnot-iNTdxkTJ1TebmXQjxJpljoZ4fSQBJrDNj1DW8lPL4pmD&components=buttons&merchant-id=BT6E78NTFJL64&debug=true"
+      data-partner-attribution-id="APPLEPAY"
+    ></script>
+
+    <script>
+      if (!window.ApplePaySession) {
+        document.getElementById("applepay-btn").innerText =
+          "you must be on safari";
+      }
+    </script>
+
+    <script src="./index.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,17 @@
+name: Lint
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    # Setup .npmrc file to publish to npm
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - name: Install JS Dependencies
+      run: npm install
+    - name: Lint html
+      run: npx htmlhint client
+    - name: Run ESLint
+      run: npx eslint . --ext .js,.jsx,.ts,.tsx

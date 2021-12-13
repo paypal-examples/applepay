@@ -1,0 +1,26 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.8.9 
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}} 
+          heroku_app_name: applepay-paypal-js-sdk # Must be unique in Heroku
+          heroku_email: ${{secrets.HEROKU_EMAIL}} 
+          usedocker: true
+          docker_build_args: |
+            NODE_ENV
+            CLIENT_ID
+            CLIENT_SECRET
+        env:
+          NODE_ENV: staging
+          CLIENT_ID: ${{secrets.CLIENT_ID}}
+          CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
