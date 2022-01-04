@@ -41,6 +41,7 @@
       if(!isMobile()){
         let el = document.createElement("div");
         el.setAttribute("id", "qrcode");
+        el.style.marginTop = "100px"
         document.body.appendChild(el);
 
         const qrCode = new QRCode("qrcode", {
@@ -51,6 +52,7 @@
           colorLight: "#ffffff",
           correctLevel: QRCode.CorrectLevel.H,
         });
+
       }
 
     </script>
