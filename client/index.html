@@ -29,23 +29,31 @@
     <script>
       if (!window.ApplePaySession) {
         document.getElementById("applepay-btn").innerText =
-          "you must be on safari";
+          "You must be on safari";
       }
     </script>
     
     <script>
-      let el = document.createElement("div");
-      el.setAttribute("id", "qrcode");
-      document.body.appendChild(el);
+      function isMobile() {
+        try{ document.createEvent("TouchEvent"); return true; }
+        catch(e){ return false; }
+      }
+      
+      if(!isMobile()){
+        let el = document.createElement("div");
+        el.setAttribute("id", "qrcode");
+        document.body.appendChild(el);
 
-      const qrCode = new QRCode("qrcode", {
-        text: window.location.href,
-        width: 200,
-        height: 200,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H,
-      });
+        const qrCode = new QRCode("qrcode", {
+          text: window.location.href,
+          width: 200,
+          height: 200,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H,
+        });
+      }
+
     </script>
 
     <script src="./index.js"></script>
