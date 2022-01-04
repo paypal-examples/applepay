@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Applepay Example</title>
+    <link href="./styles.css" rel="stylesheet" />
+
+  </head>
+  <body>
+  
+    <div id="applepay-mark"></div>
+
+    <div id="applepay-btn"></div>
+
+    <script
+      src="https://www.paypal.com/sdk/js?client-id=AZxSR8Zv4SOvF2dFSzL4mOC09tJySDtBlOmrHVQ9YjXuXlAyNWlhptTUD6seQNFfCYU38hE9_9jvtdCq&merchant-id=XWVWZ4HG4YH9N&currency=USD&debug=true&components=buttons,funding-eligibility,marks"
+      data-partner-attribution-id="APPLEPAY"
+    ></script>
+
+    <script
+      src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"
+      integrity="sha384-3zSEDfvllQohrq0PHL1fOXJuC/jSOO34H46t6UQfobFOmxE5BpjjaIJY5F2/bMnU"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      if (!window.ApplePaySession) {
+        document.getElementById("applepay-btn").innerText =
+          "You must be on safari";
+      }
+    </script>
+    
+    <script>
+      function isMobile() {
+        try{ document.createEvent("TouchEvent"); return true; }
+        catch(e){ return false; }
+      }
+      
+      if(!isMobile()){
+        let el = document.createElement("div");
+        el.setAttribute("id", "qrcode");
+        el.style.marginTop = "100px"
+        document.body.appendChild(el);
+
+        const qrCode = new QRCode("qrcode", {
+          text: window.location.href,
+          width: 200,
+          height: 200,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H,
+        });
+
+      }
+
+    </script>
+
+    <script src="./no-shipping.js"></script>
+
+  </body>
+</html>
