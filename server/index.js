@@ -44,18 +44,6 @@ app.post("/orders/:orderId", async (req, res) => {
 
     console.log({ orderId })
     console.log(JSON.stringify(req.body, null, 4))
-  
-    const body = [
-      {
-        op: "replace",
-        path: "/purchase_units/@reference_id=='default'/amount",
-        value: {
-          currency_code: "USD",
-          value: "99.00",
-        },
-      },
-    ];
-
 
     const { data } = await axios({
       url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}`,
@@ -65,7 +53,7 @@ app.post("/orders/:orderId", async (req, res) => {
         Accept: "application/json",
         Authorization: `Bearer ${access_token}`,
       },
-      data: body //req.body,
+      data: req.body,
     });
 
     console.log(data)
