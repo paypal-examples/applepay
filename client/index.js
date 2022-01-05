@@ -74,6 +74,8 @@ const order = {
   ],
 };
 
+
+
 paypal
   .Buttons({
     fundingSource: paypal.FUNDING.APPLEPAY,
@@ -91,6 +93,9 @@ paypal
       });
     },
     onShippingChange(data, actions) {
+
+      const decimal = (strValue) => parseFloat(strValue, 10)
+
       const {
         amount,
         orderID,
@@ -100,8 +105,10 @@ paypal
       } = data;
 
       console.log(JSON.stringify(data, null, 4));
-      const taxAmount = parseFloat("0.07", 10);
-      let shippingMethodAmount = parseFloat("0.00", 10);
+
+
+      let taxAmount = decimal("0.07");
+      let shippingMethodAmount = decimal("0.00");
 
       if (
         data.selected_shipping_option &&
@@ -113,12 +120,12 @@ paypal
         );
         data.selected_shipping_option.selected = true;
       }
+
       data.amount.value = (
         parseFloat(window.amount, 10) +
         taxAmount +
         shippingMethodAmount
       ).toFixed(2);
-      // return actions.order.patch(data);
 
       const body = JSON.stringify([
         {
