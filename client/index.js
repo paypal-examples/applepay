@@ -74,8 +74,6 @@ const order = {
   ],
 };
 
-
-
 paypal
   .Buttons({
     fundingSource: paypal.FUNDING.APPLEPAY,
@@ -93,9 +91,6 @@ paypal
       });
     },
     onShippingChange(data, actions) {
-
-      const decimal = (strValue) => parseFloat(strValue, 10)
-
       const {
         amount,
         orderID,
@@ -104,25 +99,30 @@ paypal
         facilitatorAccessToken,
       } = data;
 
+      const decimal = (strValue) => parseFloat(strValue, 10);
+
       console.log(JSON.stringify(data, null, 4));
 
+      let itemTotal = decimal(order?.purchase_units[0]?.amount?.breakdown?.item_total?.value ?? "0.00")
 
-      let taxAmount = decimal("0.07");
+      let taxAmount = decimal(
+        order?.purchase_units[0]?.amount?.breakdown?.tax_total?.value ?? "0.00"
+      );
+
       let shippingMethodAmount = decimal("0.00");
 
       if (
-        data.selected_shipping_option &&
-        data.selected_shipping_option.amount.value
+        selected_shipping_option?.amount?.value
       ) {
-        shippingMethodAmount = parseFloat(
-          data.selected_shipping_option.amount.value,
-          10
+        shippingMethodAmount = decimal(
+          selected_shipping_option.amount.value
         );
+
         data.selected_shipping_option.selected = true;
       }
 
       data.amount.value = (
-        parseFloat(window.amount, 10) +
+        itemTotal +
         taxAmount +
         shippingMethodAmount
       ).toFixed(2);
@@ -131,10 +131,7 @@ paypal
         {
           op: "replace",
           path: "/purchase_units/@reference_id=='default'/amount",
-          value: {
-            currency_code: "USD",
-            value: "99.00",
-          } // FIXME data.amount,
+          value: data.amount
         },
       ]);
 
