@@ -23,15 +23,6 @@ and configuring your .env config file with your Paypal ClientId and ClientSecret
 
 
 
-curl -v -X PATCH http://localhost:8080/orders/4P8858363D257290Y \
+curl -v -X POST http://localhost:8080/orders/4P8858363D257290Y \
 -H "Content-Type: application/json" \
--d '[
-        {
-          "op": "replace",
-          "path": "/purchase_units/@reference_id=='default'/amount",
-          "value": {
-            "currency_code": "USD",
-            "value": "99.00",
-          }
-        },
-      ]'
+-d '[{"op":"replace","path":"/purchase_units/@reference_id=='default'/amount","value":{"currency_code":"USD","value":"99.00"}}]'

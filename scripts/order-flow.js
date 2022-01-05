@@ -51,7 +51,21 @@ async function getOrder(id){
         {
           amount: {
             currency_code: "USD",
-            value: "100.00",
+            value: "7.05",
+            breakdown: {
+              item_total: {
+                currency_code: "USD",
+                value: "1.99",
+              },
+              tax_total: {
+                currency_code: "USD",
+                value: "0.07",
+              },
+              shipping: {
+                currency_code: "USD",
+                value: "4.99",
+              },
+            },
           },
         },
       ],

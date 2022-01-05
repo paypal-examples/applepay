@@ -36,7 +36,7 @@ app.post("/capture/:orderId", async (req, res) => {
   res.json(data);
 });
 
-app.patch("/orders/:orderId", async (req, res) => {
+app.post("/orders/:orderId", async (req, res) => {
   const { orderId } = req.params;
 
   try {
@@ -56,7 +56,7 @@ app.patch("/orders/:orderId", async (req, res) => {
       },
     ];
 
-    
+
     const { data } = await axios({
       url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}`,
       method: "PATCH",
@@ -67,13 +67,15 @@ app.patch("/orders/:orderId", async (req, res) => {
       },
       data: body //req.body,
     });
+
+    console.log(data)
     
     
     console.log(`Payment patched!`);
     res.json(data);
   } catch(err){
     console.log(err)
-    res.json({ msg: err.message, details: err.toString() })
+    res.json({ msg: err.message, details: err.toString(), body: req.body, orderId, })
   }
 
 });
