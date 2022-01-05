@@ -19,7 +19,7 @@ const shippingOptions = [
       value: "0.00",
     },
     type: "SHIPPING",
-    label: "Free Shipping",
+    label: "🆓 Free Shipping (5 days)",
     selected: false,
   },
   {
@@ -29,17 +29,17 @@ const shippingOptions = [
       value: "9.99",
     },
     type: "SHIPPING",
-    label: "1-Day Shipping",
+    label: "🚛 Ground Shipping (2 days)",
     selected: false,
   },
   {
     id: "3",
     amount: {
       currency_code: "USD",
-      value: "4.99",
+      value: "24.99",
     },
     type: "SHIPPING",
-    label: "3-Day Shipping",
+    label: "🚀 Drone Express (2 hours)",
     selected: true,
   },
 ];
