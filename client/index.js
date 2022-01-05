@@ -102,12 +102,10 @@ paypal
       } = data;
 
       const {
-        purchase_units: {
-          amount: {
-            breakdown: { item_total, tax_total },
-          },
+        amount: {
+          breakdown: { item_total, tax_total },
         },
-      } = order;
+      } = order.purchase_units[0]
 
       console.log(JSON.stringify(data, null, 4));
 
