@@ -91,6 +91,8 @@ paypal
       });
     },
     onShippingChange(data, actions) {
+      const decimal = (strValue) => parseFloat(strValue, 10);
+
       const {
         amount,
         orderID,
@@ -99,24 +101,23 @@ paypal
         facilitatorAccessToken,
       } = data;
 
-      const decimal = (strValue) => parseFloat(strValue, 10);
+      const {
+        purchase_units: {
+          amount: {
+            breakdown: { item_total, tax_total },
+          },
+        },
+      } = order;
 
       console.log(JSON.stringify(data, null, 4));
 
-      let itemTotal = decimal(order?.purchase_units[0]?.amount?.breakdown?.item_total?.value ?? "0.00")
-
-      let taxAmount = decimal(
-        order?.purchase_units[0]?.amount?.breakdown?.tax_total?.value ?? "0.00"
-      );
+      let itemTotal = decimal(item_total.value);
+      let taxAmount = decimal(tax_total.value);
 
       let shippingMethodAmount = decimal("0.00");
 
-      if (
-        selected_shipping_option?.amount?.value
-      ) {
-        shippingMethodAmount = decimal(
-          selected_shipping_option.amount.value
-        );
+      if (selected_shipping_option?.amount?.value) {
+        shippingMethodAmount = decimal(selected_shipping_option.amount.value);
 
         data.selected_shipping_option.selected = true;
       }
@@ -131,7 +132,7 @@ paypal
         {
           op: "replace",
           path: "/purchase_units/@reference_id=='default'/amount",
-          value: data.amount
+          value: data.amount,
         },
       ]);
 
