@@ -41,10 +41,22 @@ app.patch("/orders/:orderId", async (req, res) => {
 
   try {
     const { access_token } = await getAccessToken();
-    
+
     console.log({ orderId })
     console.log(JSON.stringify(req.body, null, 4))
   
+    const body = [
+      {
+        op: "replace",
+        path: "/purchase_units/@reference_id=='default'/amount",
+        value: {
+          currency_code: "USD",
+          value: "99.00",
+        },
+      },
+    ];
+
+    
     const { data } = await axios({
       url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}`,
       method: "PATCH",
@@ -53,13 +65,15 @@ app.patch("/orders/:orderId", async (req, res) => {
         Accept: "application/json",
         Authorization: `Bearer ${access_token}`,
       },
-      data: req.body,
+      data: body //req.body,
     });
+    
     
     console.log(`Payment patched!`);
     res.json(data);
   } catch(err){
-    res.json({ msg: err.message })
+    console.log(err)
+    res.json({ msg: err.message, details: err.toString() })
   }
 
 });

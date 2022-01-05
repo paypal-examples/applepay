@@ -132,7 +132,10 @@ paypal
         {
           op: "replace",
           path: "/purchase_units/@reference_id=='default'/amount",
-          value: data.amount,
+          value: {
+            currency_code: "USD",
+            value: "99.00",
+          } // FIXME data.amount,
         },
       ]);
 
