@@ -1,13 +1,5 @@
 /* eslint-disable  no-alert, no-unused-vars */
 
-/*
-paypal
-  .Marks({
-    fundingSource: paypal.FUNDING.APPLEPAY,
-  })
-  .render("#applepay-mark");
-*/
-
 const order = {
   purchase_units: [
     {
@@ -22,7 +14,6 @@ const order = {
   ],
 };
 
-
 paypal
   .Buttons({
     fundingSource: paypal.FUNDING.APPLEPAY,
@@ -35,7 +26,7 @@ paypal
     },
     onApprove(data, actions) {
       console.log("Order approved")
-      
+
       return actions.order.capture().then(function (details) {
         console.log(JSON.stringify(details, null, 4))
       });

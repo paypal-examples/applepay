@@ -1,13 +1,5 @@
 /* eslint-disable  no-alert, no-unused-vars */
 
-/*
-paypal
-  .Marks({
-    fundingSource: paypal.FUNDING.APPLEPAY,
-  })
-  .render("#applepay-mark");
-*/
-
 const order = {
   purchase_units: [
     {
@@ -140,7 +132,7 @@ paypal
       ]);
 
       return fetch(`/orders/${orderID}`, {
-        method: "post",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },

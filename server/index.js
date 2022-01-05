@@ -36,7 +36,7 @@ app.post("/capture/:orderId", async (req, res) => {
   res.json(data);
 });
 
-app.post("/orders/:orderId", async (req, res) => {
+app.patch("/orders/:orderId", async (req, res) => {
   const { orderId } = req.params;
 
   try {
@@ -55,10 +55,7 @@ app.post("/orders/:orderId", async (req, res) => {
       },
       data: req.body,
     });
-
-    console.log(data)
-    
-    
+        
     console.log(`Payment patched!`);
     res.json(data);
   } catch(err){
