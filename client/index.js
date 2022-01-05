@@ -139,7 +139,7 @@ paypal
         },
       ]);
 
-      return fetch(`/orders/:orderId`, {
+      return fetch(`/orders/${orderID}`, {
         method: "post",
         headers: {
           "Content-Type": "application/json",
