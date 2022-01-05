@@ -94,6 +94,7 @@ paypal
       return actions.order.create(order);
     },
     onApprove(data, actions) {
+      console.log("Order approved")
       return actions.order.capture().then(function (details) {
         alert(`Transaction completed by ${details.payer.name.given_name}!`);
       });
