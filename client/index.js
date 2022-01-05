@@ -1,35 +1,15 @@
 /* eslint-disable  no-alert, no-unused-vars */
 
-const amount = {
-  currency_code: "USD",
-  value: "7.05",
-  breakdown: {
-    item_total: {
-      currency_code: "USD",
-      value: "1.99",
-    },
-    tax_total: {
-      currency_code: "USD",
-      value: "0.07",
-    },
-    shipping: {
-      currency_code: "USD",
-      value: "4.99",
-    },
-  },
-};
+function totalValue(breakdown) {
+  return Object.values(breakdown)
+    .reduce((acc, curr) => (acc += parseFloat(curr.value, 10)), 0)
+    .toFixed(2)
+    .toString();
+}
 
-const shippingAddress = {
-  shipping_name: "Shipping To Cogny Cogny 69640",
-  phone: "143543778",
-  address_line_1: "33 Rue des Écoles",
-  address_line_2: "",
-  admin_area_1: "Cogny",
-  admin_area_2: "Cogny",
-  postal_code: "69640",
-  country_code: "FR",
-  address_details: {},
-};
+function shippingAmount(shippingOptions) {
+  return shippingOptions.find((option) => option.selected).amount;
+}
 
 const shippingOptions = [
   {
@@ -64,6 +44,36 @@ const shippingOptions = [
   },
 ];
 
+const breakdown = {
+  item_total: {
+    currency_code: "USD",
+    value: "1.99",
+  },
+  tax_total: {
+    currency_code: "USD",
+    value: "0.07",
+  },
+  shipping: shippingAmount(shippingOptions),
+};
+
+const amount = {
+  currency_code: "USD",
+  value: totalValue(breakdown),
+  breakdown: breakdown,
+};
+
+const shippingAddress = {
+  shipping_name: "Shipping To Cogny Cogny 69640",
+  phone: "143543778",
+  address_line_1: "33 Rue des Écoles",
+  address_line_2: "",
+  admin_area_1: "Cogny",
+  admin_area_2: "Cogny",
+  postal_code: "69640",
+  country_code: "FR",
+  address_details: {},
+};
+
 const order = {
   purchase_units: [
     {
@@ -92,28 +102,30 @@ paypal
     },
     onApprove(data, actions) {
       console.log("Order approved");
+
       return actions.order.capture().then(function (details) {
         alert(`Transaction completed by ${details.payer.name.given_name}!`);
       });
     },
     onShippingChange(data, actions) {
-      const decimal = (strValue) => parseFloat(strValue, 10);
+      console.log("onShippingChange");
+      console.log(JSON.stringify(data, null, 4))
 
       const { orderID, selected_shipping_option } = data;
-
       const {
         breakdown: { item_total, tax_total },
       } = amount;
 
-      console.log(JSON.stringify({ data, item_total, tax_total }, null, 4));
+      const itemTotal = parseFloat(item_total.value, 10);
+      const taxAmount = parseFloat(tax_total.value, 10);
 
-      let itemTotal = decimal(item_total.value);
-      let taxAmount = decimal(tax_total.value);
-
-      let shippingMethodAmount = decimal("0.00");
+      let shippingMethodAmount = parseFloat("0.00", 10);
 
       if (selected_shipping_option?.amount?.value) {
-        shippingMethodAmount = decimal(selected_shipping_option.amount.value);
+        shippingMethodAmount = parseFloat(
+          selected_shipping_option.amount.value,
+          10
+        );
 
         data.selected_shipping_option.selected = true;
       }
@@ -124,20 +136,18 @@ paypal
         shippingMethodAmount
       ).toFixed(2);
 
-      const body = JSON.stringify([
-        {
-          op: "replace",
-          path: "/purchase_units/@reference_id=='default'/amount",
-          value: data.amount,
-        },
-      ]);
-
       return fetch(`/orders/${orderID}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body,
+        body: JSON.stringify([
+          {
+            op: "replace",
+            path: "/purchase_units/@reference_id=='default'/amount",
+            value: data.amount,
+          },
+        ]),
       })
         .then((result) => result.json())
         .then((json) => {
