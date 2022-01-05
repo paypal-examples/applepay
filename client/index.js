@@ -99,5 +99,40 @@ paypal
         alert(`Transaction completed by ${details.payer.name.given_name}!`);
       });
     },
+    onShippingChange(data, actions) {
+      console.log(JSON.stringify(data, null, 4))
+      const taxAmount = parseFloat('0.07', 10);
+      let shippingMethodAmount = parseFloat('0.00', 10);
+
+      if (data.selected_shipping_option && data.selected_shipping_option.amount.value) {
+          shippingMethodAmount = parseFloat(data.selected_shipping_option.amount.value, 10);
+          data.selected_shipping_option.selected = true;
+      }
+      data.amount.value = (parseFloat(window.amount, 10) + taxAmount + shippingMethodAmount).toFixed(2);
+      // return actions.order.patch(data);
+
+      const body = JSON.stringify([{
+          op: 'replace',
+          path: '/purchase_units/@reference_id==\'default\'/amount',
+          value: data.amount
+      }]);
+
+      return fetch(`/orders/:orderId/patch`,
+          {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body
+          })
+          .then(result => result.json())
+          .then(json => {
+              console.log(`Successful Order patch call: ${JSON.stringify(json)}`);
+              return actions.resolve();
+          })
+          .catch(err => {
+              return actions.reject(err);
+          });
+    }
   })
   .render("#applepay-btn");

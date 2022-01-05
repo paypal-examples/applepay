@@ -36,6 +36,30 @@ app.post("/capture/:orderId", async (req, res) => {
   res.json(data);
 });
 
+app.post("/orders/:orderId/patch", async (req, res) => {
+  const { orderId } = req.params;
+
+  const { access_token } = await getAccessToken();
+  console.log({ orderId })
+  console.log(JSON.stringify(req.body, null, 4))
+
+  const { data } = await axios({
+    url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}`,
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${access_token}`,
+    },
+    data: req.body
+  });
+  
+
+  console.log(`Payment patched!`);
+  res.json(data);
+});
+
+
 /**
  * Webhook handlers.
  */
