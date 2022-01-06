@@ -27,9 +27,14 @@ paypal
     onApprove(data, actions) {
       console.log("Order approved");
 
-      return actions.order.capture().then(function (details) {
-        console.log(JSON.stringify(details, null, 4));
-      });
+      fetch(`/capture/${data.orderID}`, {
+        method: "post",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          alert("order captured")
+        })
+        .catch(console.error);
     },
   })
   .render("#applepay-btn");

@@ -101,9 +101,14 @@ paypal
     onApprove(data, actions) {
       console.log("Order approved");
 
-      return actions.order.capture().then(function (details) {
-        alert(`Transaction completed by ${details.payer.name.given_name}!`);
-      });
+      fetch(`/capture/${data.orderID}`, {
+        method: "post",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          alert("order captured")
+        })
+        .catch(console.error);
     },
     onShippingChange(data, actions) {
       console.log("onShippingChange");

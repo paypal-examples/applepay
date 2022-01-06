@@ -21,19 +21,23 @@
       data-partner-attribution-id="APPLEPAY"
     ></script>
 
+
+
+    <script>
+      /* Development message - remove in prod */
+      if (!window.ApplePaySession) {
+        document.getElementById("applepay-btn").innerText =
+          "You must be on safari to view applepay button";
+      }
+    </script>
+    
+    <!-- qrcode.min.js - for mobile testing -->
     <script
       src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"
       integrity="sha384-3zSEDfvllQohrq0PHL1fOXJuC/jSOO34H46t6UQfobFOmxE5BpjjaIJY5F2/bMnU"
       crossorigin="anonymous"
     ></script>
 
-    <script>
-      if (!window.ApplePaySession) {
-        document.getElementById("applepay-btn").innerText =
-          "You must be on safari";
-      }
-    </script>
-    
     <script>
       function isMobile() {
         try{ document.createEvent("TouchEvent"); return true; }
