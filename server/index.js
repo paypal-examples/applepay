@@ -10,11 +10,11 @@ const { WEBHOOK_ID, PORT, PAYPAL_API_BASE } = require("./config");
 
 const app = express();
 
-app.use(express.static(resolve(__dirname, "../client")));
+app.use(express.static(resolve(__dirname, "../examples")));
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.sendFile(resolve(__dirname, "../client/index.html"));
+  res.sendFile(resolve(__dirname, "../examples/index.html"));
 });
 
 app.post("/capture/:orderId", async (req, res) => {
