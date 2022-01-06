@@ -1,15 +1,13 @@
 /* eslint-disable  no-alert, no-unused-vars */
 
-function totalValue(breakdown) {
-  return Object.values(breakdown)
-    .reduce((acc, curr) => (acc += parseFloat(curr.value, 10)), 0)
+const totalValueFromBreakdown = (breakdown) =>
+  Object.values(breakdown)
+    .reduce((total, item) => (total += parseFloat(item.value, 10)), 0)
     .toFixed(2)
     .toString();
-}
 
-function shippingAmount(shippingOptions) {
-  return shippingOptions.find((option) => option.selected).amount;
-}
+const selectedShippingAmount = (shippingOptions) =>
+  shippingOptions.find((option) => option.selected).amount;
 
 const shippingOptions = [
   {
@@ -19,7 +17,7 @@ const shippingOptions = [
       value: "0.00",
     },
     type: "SHIPPING",
-    label: "🆓 Free Shipping (5 days)",
+    label: "Free Shipping (4 days)",
     selected: false,
   },
   {
@@ -53,13 +51,13 @@ const breakdown = {
     currency_code: "USD",
     value: "0.07",
   },
-  shipping: shippingAmount(shippingOptions),
+  shipping: selectedShippingAmount(shippingOptions),
 };
 
 const amount = {
   currency_code: "USD",
-  value: totalValue(breakdown),
-  breakdown: breakdown,
+  value: totalValueFromBreakdown(breakdown),
+  breakdown,
 };
 
 const shippingAddress = {
@@ -109,12 +107,23 @@ paypal
     },
     onShippingChange(data, actions) {
       console.log("onShippingChange");
-      console.log(JSON.stringify(data, null, 4))
+      console.log(JSON.stringify(data, null, 4));
 
-      const { orderID, selected_shipping_option } = data;
+      const { orderID, selected_shipping_option, shipping_address } = data;
+
+      /*
+       * Handle Shipping Address Changes
+       */
+      if (shipping_address.country_code !== "US") {
+        return actions.reject(new Error("Sorry we only ship to the US"));
+      }
+
+      /*
+       * Handle Shipping Option Update
+       */
       const {
         breakdown: { item_total, tax_total },
-      } = amount;
+      } = order.purchase_units[0].amount
 
       const itemTotal = parseFloat(item_total.value, 10);
       const taxAmount = parseFloat(tax_total.value, 10);
@@ -149,7 +158,12 @@ paypal
           },
         ]),
       })
-        .then((result) => result.json())
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("patching order");
+          }
+          return res.json();
+        })
         .then((json) => {
           console.log(`Successful Order patch call: ${JSON.stringify(json)}`);
           return actions.resolve();
