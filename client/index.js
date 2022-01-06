@@ -114,8 +114,10 @@ paypal
       /*
        * Handle Shipping Address Changes
        */
-      if (shipping_address.country_code !== "US") {
-        return actions.reject(new Error("Sorry we only ship to the US"));
+      if (shipping_address?.country_code?.toUpperCase() !== "US") {
+        // https://developer.apple.com/documentation/apple_pay_on_the_web/applepayerrorcode
+        // https://developer.apple.com/documentation/apple_pay_on_the_web/applepayerror
+        return actions.reject(new window.ApplePayError("shippingContactInvalid", "countryCode", "Sorry we only ship to the US"));
       }
 
       /*
