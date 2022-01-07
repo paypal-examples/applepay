@@ -1,37 +1,18 @@
 /* eslint-disable  no-alert, no-unused-vars */
 
-const totalValueFromBreakdown = (breakdown) =>
-  Object.values(breakdown)
-    .reduce((total, item) => (total += parseFloat(item.value, 10)), 0)
-    .toFixed(2)
-    .toString();
-
-const selectedShippingAmount = (shippingOptions) =>
-  shippingOptions.find((option) => option.selected).amount;
-
 const shippingOptions = [
   {
     id: "1",
     amount: {
       currency_code: "USD",
-      value: "0.00",
-    },
-    type: "SHIPPING",
-    label: "Free Shipping (4 days)",
-    selected: false,
-  },
-  {
-    id: "2",
-    amount: {
-      currency_code: "USD",
-      value: "9.99",
+      value: "4.99",
     },
     type: "SHIPPING",
     label: "🚛 Ground Shipping (2 days)",
     selected: false,
   },
   {
-    id: "3",
+    id: "2",
     amount: {
       currency_code: "USD",
       value: "24.99",
@@ -42,6 +23,8 @@ const shippingOptions = [
   },
 ];
 
+const selectedShippingAmount = shippingOptions.find((option) => option.selected).amount;
+  
 const breakdown = {
   item_total: {
     currency_code: "USD",
@@ -51,24 +34,29 @@ const breakdown = {
     currency_code: "USD",
     value: "0.07",
   },
-  shipping: selectedShippingAmount(shippingOptions),
+  shipping: selectedShippingAmount,
 };
+
+const breakdownTotalValue = Object.values(breakdown)
+  .reduce((total, item) => (total += parseFloat(item.value, 10)), 0)
+  .toFixed(2)
+  .toString();
 
 const amount = {
   currency_code: "USD",
-  value: totalValueFromBreakdown(breakdown),
+  value: breakdownTotalValue,
   breakdown,
 };
 
 const shippingAddress = {
-  shipping_name: "Shipping To Cogny Cogny 69640",
-  phone: "143543778",
-  address_line_1: "33 Rue des Écoles",
-  address_line_2: "",
-  admin_area_1: "Cogny",
-  admin_area_2: "Cogny",
-  postal_code: "69640",
-  country_code: "FR",
+  shipping_name: "John Doe",
+  phone: "5109323432",
+  address_line_1: "123 Townsend St",
+  address_line_2: "Floor 6",
+  admin_area_1: "CA",
+  admin_area_2: "San Francisco",
+  postal_code: "94107",
+  country_code: "US",
   address_details: {},
 };
 
@@ -106,7 +94,7 @@ paypal
       })
         .then((res) => res.json())
         .then((data) => {
-          alert("order captured")
+          alert("order captured");
         })
         .catch(console.error);
     },
@@ -122,7 +110,13 @@ paypal
       if (shipping_address?.country_code?.toUpperCase() !== "US") {
         // https://developer.apple.com/documentation/apple_pay_on_the_web/applepayerrorcode
         // https://developer.apple.com/documentation/apple_pay_on_the_web/applepayerror
-        return actions.reject(new window.ApplePayError("shippingContactInvalid", "countryCode", "Sorry we only ship to the US"));
+        return actions.reject(
+          new window.ApplePayError(
+            "shippingContactInvalid",
+            "countryCode",
+            "Sorry we only ship to the US"
+          )
+        );
       }
 
       /*
@@ -130,7 +124,7 @@ paypal
        */
       const {
         breakdown: { item_total, tax_total },
-      } = order.purchase_units[0].amount
+      } = order.purchase_units[0].amount;
 
       const itemTotal = parseFloat(item_total.value, 10);
       const taxAmount = parseFloat(tax_total.value, 10);
