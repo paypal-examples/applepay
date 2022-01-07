@@ -9,7 +9,7 @@ const shippingOptions = [
     },
     type: "SHIPPING",
     label: "🚛 Ground Shipping (2 days)",
-    selected: false,
+    selected: true,
   },
   {
     id: "2",
@@ -19,7 +19,7 @@ const shippingOptions = [
     },
     type: "SHIPPING",
     label: "🚀 Drone Express (2 hours)",
-    selected: true,
+    selected: false,
   },
 ];
 
