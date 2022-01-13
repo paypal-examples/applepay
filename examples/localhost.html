@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Applepay Example Localhost</title>
+    <link href="./styles.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="applepay-btn"></div>
+
+    <script
+      src="https://localhost.paypal.com:8000/sdk/js?client-id=AZ4oOpMmgJ3zzqD5quh97IHZnuabU1vwRxfnVKe0CqvZOd6Nfcr-qr_sBKCnRJxODfhSd8IQ2qfL-2aZ&merchant-id=FPK9J4G4WWJMS&currency=USD&debug=true&components=buttons,funding-eligibility,marks"
+      data-partner-attribution-id="APPLEPAY"
+    ></script>
+
+    <script>
+      /* Development message - remove in prod */
+      if (!window.ApplePaySession) {
+        document.getElementById("applepay-btn").innerText =
+          "You must be on safari to view applepay button";
+      }
+    </script>
+
+    <script src="./shipping.js"></script>
+
+    <!-- qrcode.min.js - for mobile testing -->
+    <script
+      src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"
+      integrity="sha384-3zSEDfvllQohrq0PHL1fOXJuC/jSOO34H46t6UQfobFOmxE5BpjjaIJY5F2/bMnU"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      function isMobile() {
+        try {
+          document.createEvent("TouchEvent");
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      if (!isMobile()) {
+        let el = document.createElement("div");
+        el.setAttribute("id", "qrcode");
+        el.style.position = "fixed";
+        el.style.right = "10px";
+        el.style.bottom = "10px";
+        document.body.appendChild(el);
+
+        const qrCode = new QRCode("qrcode", {
+          text: window.location.href,
+          width: 200,
+          height: 200,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H,
+        });
+      }
+    </script>
+
+    <script>
+      const order = {
+        purchase_units: [
+          {
+            payee: {
+              merchant_id: "FPK9J4G4WWJMS",
+            },
+            amount: {
+              currency_code: "USD",
+              value: "7.05",
+            },
+          },
+        ],
+      };
+
+      paypal
+        .Buttons({
+          fundingSource: paypal.FUNDING.APPLEPAY,
+          style: {
+            label: "pay",
+            color: "black",
+          },
+          createOrder(data, actions) {
+            return actions.order.create(order);
+          },
+          onApprove(data, actions) {
+            console.log("Order approved");
+
+            fetch(`/capture/${data.orderID}`, {
+              method: "post",
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                alert("order captured");
+              })
+              .catch(console.error);
+          },
+        })
+        .render("#applepay-btn");
+    </script>
+  </body>
+</html>
