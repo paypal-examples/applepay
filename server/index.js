@@ -17,6 +17,10 @@ app.get("/", (req, res) => {
   res.sendFile(resolve(__dirname, "../examples/index.html"));
 });
 
+app.get("/.well-known/apple-developer-merchantid-domain-association", (req, res) => {
+  res.sendFile(resolve(__dirname, "../.well-known/apple-developer-domain-association"));
+});
+
 app.post("/capture/:orderId", async (req, res) => {
   const { orderId } = req.params;
 
