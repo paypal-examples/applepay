@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const { PAYPAL_API_BASE } = require("../server/config");
-const { getAccessToken } = require("../server/oauth");
+const { getAccessToken } = require("../server/paypal");
 
 (async function () {
   let proxyURL

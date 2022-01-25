@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const { getAccessToken } = require("../server/oauth");
+const { getAccessToken } = require("../server/paypal");
 const { PAYPAL_API_BASE } = require("../server/config");
 
 async function createOrder() {

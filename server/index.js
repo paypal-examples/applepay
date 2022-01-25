@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const { getAccessToken } = require("./oauth");
+const { getAccessToken } = require("./paypal");
 const { WEBHOOK_ID, PORT, PAYPAL_API_BASE } = require("./config");
 
 const app = express();
@@ -69,6 +69,14 @@ app.patch("/orders/:orderId", async (req, res) => {
 
 });
 
+app.post("/calculate-shipping", async (req, res) => {
+  const { shippingAddress } = req.body
+  console.log({ shippingAddress })
+
+  res.json({
+    taxRate: `${Math.floor(Math.random() * 20)}`
+  })
+})
 
 /**
  * Webhook handlers.

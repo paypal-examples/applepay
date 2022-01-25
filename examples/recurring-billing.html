@@ -4,14 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Applepay Example Localhost</title>
+    <title>Applepay Example</title>
     <link href="./styles.css" rel="stylesheet" />
   </head>
   <body>
+
     <div id="applepay-btn"></div>
 
     <script
-      src="https://localhost.paypal.com:8443/sdk/js?client-id=ATq4kPMhjTp6qrUQybY0SSz6Es1sO0YDF9f67rt2e-dZx36hHGbV1U9Ek3QRwcHcyyBlHXysRr-uXg18&merchant-id=8THX48SJBD4LU&currency=USD&debug=true&components=buttons,funding-eligibility,marks"
+      src="https://www.paypal.com/sdk/js?client-id=AZxSR8Zv4SOvF2dFSzL4mOC09tJySDtBlOmrHVQ9YjXuXlAyNWlhptTUD6seQNFfCYU38hE9_9jvtdCq&merchant-id=XWVWZ4HG4YH9N&currency=USD&debug=true&components=buttons,funding-eligibility,marks"
       data-partner-attribution-id="APPLEPAY"
     ></script>
 
@@ -23,6 +24,7 @@
       }
     </script>
 
+    <script src="./recurring-billing.js"></script>
 
     <!-- qrcode.min.js - for mobile testing -->
     <script
@@ -44,9 +46,9 @@
       if (!isMobile()) {
         let el = document.createElement("div");
         el.setAttribute("id", "qrcode");
-        el.style.position = "fixed";
-        el.style.right = "10px";
-        el.style.bottom = "10px";
+        el.style.position = "fixed"
+        el.style.right = "10px"
+        el.style.bottom = "10px"
         document.body.appendChild(el);
 
         const qrCode = new QRCode("qrcode", {
@@ -60,45 +62,6 @@
       }
     </script>
 
-    <script>
-      const order = {
-        purchase_units: [
-          {
-            payee: {
-              merchant_id: "FPK9J4G4WWJMS",
-            },
-            amount: {
-              currency_code: "USD",
-              value: "7.05",
-            },
-          },
-        ],
-      };
 
-      paypal
-        .Buttons({
-          fundingSource: paypal.FUNDING.APPLEPAY,
-          style: {
-            label: "pay",
-            color: "black",
-          },
-          createOrder(data, actions) {
-            return actions.order.create(order);
-          },
-          onApprove(data, actions) {
-            console.log("Order approved");
-
-            fetch(`/capture/${data.orderID}`, {
-              method: "post",
-            })
-              .then((res) => res.json())
-              .then((data) => {
-                alert("order captured");
-              })
-              .catch(console.error);
-          },
-        })
-        .render("#applepay-btn");
-    </script>
   </body>
 </html>
