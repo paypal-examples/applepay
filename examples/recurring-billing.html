@@ -16,51 +16,10 @@
       data-partner-attribution-id="APPLEPAY"
     ></script>
 
-    <script>
-      /* Development message - remove in prod */
-      if (!window.ApplePaySession) {
-        document.getElementById("applepay-btn").innerText =
-          "You must be on safari to view applepay button";
-      }
-    </script>
-
     <script src="./recurring-billing.js"></script>
 
-    <!-- qrcode.min.js - for mobile testing -->
-    <script
-      src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"
-      integrity="sha384-3zSEDfvllQohrq0PHL1fOXJuC/jSOO34H46t6UQfobFOmxE5BpjjaIJY5F2/bMnU"
-      crossorigin="anonymous"
-    ></script>
-
-    <script>
-      function isMobile() {
-        try {
-          document.createEvent("TouchEvent");
-          return true;
-        } catch (e) {
-          return false;
-        }
-      }
-
-      if (!isMobile()) {
-        let el = document.createElement("div");
-        el.setAttribute("id", "qrcode");
-        el.style.position = "fixed"
-        el.style.right = "10px"
-        el.style.bottom = "10px"
-        document.body.appendChild(el);
-
-        const qrCode = new QRCode("qrcode", {
-          text: window.location.href,
-          width: 150,
-          height: 150,
-          colorDark: "#000000",
-          colorLight: "#ffffff",
-          correctLevel: QRCode.CorrectLevel.H,
-        });
-      }
-    </script>
+    <!-- qrcode - for dev mobile testing -->
+    <script defer src="./utils/qrcode.js"></script>
 
 
   </body>

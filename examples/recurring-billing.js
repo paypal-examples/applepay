@@ -1,6 +1,6 @@
 /* eslint-disable  no-alert, no-unused-vars */
 
-alert("not implemented yet")
+alert("Work in progress")
 
 const shippingOptions = [
   {
