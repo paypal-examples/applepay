@@ -23,8 +23,18 @@ async function createOrder() {
         {
           amount: {
             currency_code: "USD",
-            value: "100.00",
-          },
+            value: "1.20",
+            breakdown: {
+              item_total: {
+                currency_code: "USD",
+                value: "1.00",
+              },
+              tax_total: {
+                currency_code: "USD",
+                value: "0.20",
+              }
+            }
+          }
         },
       ],
     },
