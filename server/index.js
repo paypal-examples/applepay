@@ -46,9 +46,6 @@ app.patch("/orders/:orderId", async (req, res) => {
   try {
     const { access_token } = await getAccessToken();
 
-    console.log({ orderId })
-    console.log(JSON.stringify(req.body, null, 4))
-
     const { data } = await axios({
       url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}`,
       method: "PATCH",
@@ -68,15 +65,6 @@ app.patch("/orders/:orderId", async (req, res) => {
   }
 
 });
-
-app.post("/calculate-shipping", async (req, res) => {
-  const { shippingAddress } = req.body
-  console.log({ shippingAddress })
-
-  res.json({
-    taxRate: `${Math.floor(Math.random() * 20)}`
-  })
-})
 
 /**
  * Webhook handlers.
