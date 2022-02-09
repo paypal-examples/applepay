@@ -130,7 +130,11 @@ app.post("/update-shipping", async (req, res) => {
         {
           op: "replace",
           path: "/purchase_units/@reference_id=='default'/amount",
-          value: data.purchase_units[0].amount,
+          // value: data.purchase_units[0].amount,
+          value: {
+            currency_code: "USD", 
+            value: data.purchase_units[0].amount.value
+          }
         },
       ]),
     });
