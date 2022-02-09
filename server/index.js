@@ -13,6 +13,15 @@ const app = express();
 app.use(express.static(resolve(__dirname, "../examples")));
 app.use(express.json());
 
+// requireHTTPS
+app.use((req, res, next) => {
+  // The 'x-forwarded-proto' check is for Heroku
+  if (!req.secure && req.get('x-forwarded-proto') !== 'https' && process.env.NODE_ENV === "production") {
+    return res.redirect('https://' + req.get('host') + req.url);
+  }
+  next();
+});
+
 app.get("/", (req, res) => {
   res.sendFile(resolve(__dirname, "../examples/index.html"));
 });
@@ -65,6 +74,10 @@ app.patch("/orders/:orderId", async (req, res) => {
   }
 
 });
+
+app.post("/calculate-shipping", () => {
+
+})
 
 /**
  * Webhook handlers.
