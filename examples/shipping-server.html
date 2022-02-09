@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Applepay - Shipping Options</title>
+    <link href="./styles.css" rel="stylesheet" />
+  </head>
+  <body>
+
+    <div id="applepay-btn"></div>
+
+    <script
+      src="https://www.paypal.com/sdk/js?client-id=AZxSR8Zv4SOvF2dFSzL4mOC09tJySDtBlOmrHVQ9YjXuXlAyNWlhptTUD6seQNFfCYU38hE9_9jvtdCq&merchant-id=XWVWZ4HG4YH9N&currency=USD&debug=true&components=buttons,funding-eligibility,marks"
+      data-partner-attribution-id="APPLEPAY"
+    ></script>
+
+    <script src="./shipping-server.js"></script>
+
+    <!-- qrcode - for dev mobile testing -->
+    <script defer src="./utils/qrcode.js"></script>
+
+  </body>
+</html>

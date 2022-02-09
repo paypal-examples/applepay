@@ -102,8 +102,6 @@ paypal
       console.log("onShippingChange");
       console.log(JSON.stringify(data, null, 4));
 
-      const { orderID, selected_shipping_option, shipping_address } = data;
-
       /*
        * Handle Shipping Address Changes - example shipping to us only
        */
@@ -122,46 +120,16 @@ paypal
       /*
        * Handle Shipping Option Update
        */
-      const {
-        breakdown: { item_total, tax_total },
-      } = order.purchase_units[0].amount;
-
-      const itemTotal = parseFloat(item_total.value, 10);
-      const taxAmount = parseFloat(tax_total.value, 10);
-
-      let shippingMethodAmount = parseFloat("0.00", 10);
-
-      if (selected_shipping_option?.amount?.value) {
-        shippingMethodAmount = parseFloat(
-          selected_shipping_option.amount.value,
-          10
-        );
-
-        data.selected_shipping_option.selected = true;
-      }
-
-      data.amount.value = (
-        itemTotal +
-        taxAmount +
-        shippingMethodAmount
-      ).toFixed(2);
-
-      return fetch(`/orders/${orderID}`, {
-        method: "PATCH",
+      return fetch(`/calculate-shipping`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify([
-          {
-            op: "replace",
-            path: "/purchase_units/@reference_id=='default'/amount",
-            value: data.amount,
-          },
-        ]),
+        body: JSON.stringify(data),
       })
         .then((res) => {
           if (!res.ok) {
-            throw new Error("patching order");
+            throw new Error("shipping update");
           }
           return res.json();
         })

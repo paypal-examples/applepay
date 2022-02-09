@@ -76,9 +76,67 @@ app.patch("/orders/:orderId", async (req, res) => {
 
 });
 
-app.post("/calculate-shipping/:orderId", async (req, res) => {
-  const { orderId } = req.params;
-  res.json({ orderId });
+app.post("/calculate-shipping", async (req, res) => {
+  const { orderID, selected_shipping_option, /*shipping_address,*/ amount } = req.body;
+
+  try {
+    const { access_token } = await getAccessToken();
+
+    const { data: order } = await axios({
+      url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderID}`,
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${access_token}`,
+      }
+    });
+  
+    const {
+      breakdown: { item_total, tax_total },
+    } = order.purchase_units[0].amount;
+  
+    const itemTotal = parseFloat(item_total.value, 10);
+    const taxAmount = parseFloat(tax_total.value, 10);
+  
+    let shippingMethodAmount = parseFloat("0.00", 10);
+  
+    if (selected_shipping_option.amount.value) {
+      shippingMethodAmount = parseFloat(
+        selected_shipping_option.amount.value,
+        10
+      );
+  
+      selected_shipping_option.selected = true;
+    }
+  
+    amount.value = (
+      itemTotal +
+      taxAmount +
+      shippingMethodAmount
+    ).toFixed(2);
+  
+    await axios({
+      url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderID}`,
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+      data:  JSON.stringify([
+        {
+          op: "replace",
+          path: "/purchase_units/@reference_id=='default'/amount",
+          value: amount,
+        },
+      ]),
+    });
+  
+    res.json({ msg: "ok" });
+  } catch(err){
+    res.json({ msg: err.message, details: err.toString(), body: req.body, orderID, })
+  }
 })
 
 /**
