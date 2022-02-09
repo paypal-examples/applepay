@@ -110,7 +110,8 @@ app.post("/update-shipping", async (req, res) => {
       taxAmount +
       shippingMethodAmount
     ).toFixed(2);
-  
+    orderRes = data
+    
     await axios({
       url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderID}`,
       method: "PATCH",
@@ -130,7 +131,8 @@ app.post("/update-shipping", async (req, res) => {
   
     res.json({ msg: "ok" });
   } catch(err){
-    res.json({ msg: err.message, details: err.toString(), body: req.body, orderID, orderRes })
+    res.json(orderRes)
+    //res.json({ msg: err.message, details: err.toString(), body: req.body, orderID, orderRes })
   }
 
 })
