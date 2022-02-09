@@ -133,7 +133,7 @@ app.post("/update-shipping", async (req, res) => {
           // value: data.purchase_units[0].amount,
           value: {
             currency_code: "USD", 
-            value: data.purchase_units[0].amount.value
+            value: "99.99"//data.purchase_units[0].amount.value
           }
         },
       ]),
@@ -141,7 +141,7 @@ app.post("/update-shipping", async (req, res) => {
   
     res.json({ msg: "ok" });
   } catch(err){
-    res.json(orderRes)
+    res.json({ orderRes,  })
     //res.json({ msg: err.message, details: err.toString(), body: req.body, orderID, orderRes })
   }
 
