@@ -113,7 +113,7 @@ app.post("/calculate-shipping", async (req, res) => {
       selected_shipping_option.selected = true;
     }
   
-    data.amount.value = (
+    data.purchase_units[0].amount.value = (
       itemTotal +
       taxAmount +
       shippingMethodAmount
