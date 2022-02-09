@@ -7,21 +7,13 @@ dotenv.config();
 
 const { getAccessToken } = require("./paypal");
 const { WEBHOOK_ID, PORT, PAYPAL_API_BASE } = require("./config");
+const { requireHTTPS } = require("./middleware")
 
 const app = express();
 
-// require HTTPS
-app.use((req, res, next) => {
-  // The 'x-forwarded-proto' check is for Heroku
-  if (req.get('x-forwarded-proto') !== 'https') {
-    res.redirect(`https://${req.get('host')}${req.url}`);
-  } else {
-    next();
-  }
-});
-
-app.use(express.static(resolve(__dirname, "../examples")));
+app.use(requireHTTPS);
 app.use(express.json());
+app.use(express.static(resolve(__dirname, "../examples")));
 
 app.get("/", (req, res) => {
   res.sendFile(resolve(__dirname, "../examples/index.html"));
@@ -76,8 +68,8 @@ app.patch("/orders/:orderId", async (req, res) => {
 
 });
 
-app.post("/calculate-shipping", async (req, res) => {
-  const { orderID, selected_shipping_option } = req.body;
+app.post("/update-shipping", async (req, res) => {
+  const { orderID, /* shipping_address */ selected_shipping_option } = req.body;
 
   let orderRes 
   try {
@@ -131,7 +123,7 @@ app.post("/calculate-shipping", async (req, res) => {
         {
           op: "replace",
           path: "/purchase_units/@reference_id=='default'/amount",
-          value: data.amount,
+          value: data.purchase_units[0].amount,
         },
       ]),
     });

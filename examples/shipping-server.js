@@ -109,7 +109,7 @@ paypal
       /*
        * Handle Shipping Option Update
        */
-      fetch(`/calculate-shipping`, {
+      fetch(`/update-shipping`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
