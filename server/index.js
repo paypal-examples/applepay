@@ -7,7 +7,7 @@ dotenv.config();
 
 const { getAccessToken } = require("./paypal");
 const { WEBHOOK_ID, PORT, PAYPAL_API_BASE } = require("./config");
-const { requireHTTPS } = require("./middleware")
+const { requireHTTPS } = require("./middleware");
 
 const app = express();
 
@@ -19,9 +19,14 @@ app.get("/", (req, res) => {
   res.sendFile(resolve(__dirname, "../examples/index.html"));
 });
 
-app.get("/.well-known/apple-developer-merchantid-domain-association", (req, res) => {
-  res.sendFile(resolve(__dirname, "../.well-known/apple-developer-domain-association"));
-});
+app.get(
+  "/.well-known/apple-developer-merchantid-domain-association",
+  (req, res) => {
+    res.sendFile(
+      resolve(__dirname, "../.well-known/apple-developer-domain-association")
+    );
+  }
+);
 
 app.post("/capture/:orderId", async (req, res) => {
   const { orderId } = req.params;
@@ -58,26 +63,30 @@ app.patch("/orders/:orderId", async (req, res) => {
       },
       data: req.body,
     });
-        
+
     console.log(`Payment patched!`);
     res.json(data);
-  } catch(err){
-    console.log(err)
-    res.json({ msg: err.message, details: err.toString(), body: req.body, orderId, })
+  } catch (err) {
+    console.log(err);
+    res.json({
+      msg: err.message,
+      details: err.toString(),
+      body: req.body,
+      orderId,
+    });
   }
-
 });
 
 app.post("/update-shipping", async (req, res) => {
   const { orderID, /* shipping_address */ selected_shipping_option } = req.body;
 
-  let orderRes 
+  let orderRes;
   try {
     const { access_token } = await getAccessToken();
 
     /*
-    * GET Order
-    */
+     * GET Order
+     */
     const { data } = await axios({
       url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderID}`,
       method: "GET",
@@ -85,39 +94,39 @@ app.post("/update-shipping", async (req, res) => {
         "Content-Type": "application/json",
         Accept: "application/json",
         Authorization: `Bearer ${access_token}`,
-      }
+      },
     });
-  
-    orderRes = data
+
+    orderRes = data;
 
     const {
       breakdown: { item_total, tax_total },
     } = data.purchase_units[0].amount;
-  
+
     const itemTotal = parseFloat(item_total.value, 10);
     const taxAmount = parseFloat(tax_total.value, 10);
-  
+
     let shippingMethodAmount = parseFloat("0.00", 10);
-  
+
     if (selected_shipping_option.amount.value) {
       shippingMethodAmount = parseFloat(
         selected_shipping_option.amount.value,
         10
       );
-  
+
       selected_shipping_option.selected = true;
     }
-  
+
     data.purchase_units[0].amount.value = (
       itemTotal +
       taxAmount +
       shippingMethodAmount
     ).toFixed(2);
-    orderRes = data
+    orderRes = data;
 
     /*
-    * PATCH Order
-    */
+     * PATCH Order
+     */
     await axios({
       url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderID}`,
       method: "PATCH",
@@ -126,40 +135,38 @@ app.post("/update-shipping", async (req, res) => {
         Accept: "application/json",
         Authorization: `Bearer ${access_token}`,
       },
-      data:  JSON.stringify([
+      data: JSON.stringify([
         {
           op: "replace",
           path: "/purchase_units/@reference_id=='default'/amount",
-          // value: data.purchase_units[0].amount,
           value: {
             currency_code: "USD",
-            value: "8.05",
+            value: (itemTotal + taxAmount + shippingMethodAmount).toFixed(2),
             breakdown: {
               item_total: {
                 currency_code: "USD",
-                value: "2.99",
+                value: itemTotal,
               },
               tax_total: {
                 currency_code: "USD",
-                value: "0.07",
+                value: taxAmount,
               },
               shipping: {
                 currency_code: "USD",
-                value: "4.99",
+                value: shippingMethodAmount,
               },
             },
-          }
+          },
         },
       ]),
     });
-  
+
     res.json({ msg: "ok", ...orderRes });
-  } catch(err){
-    res.json({ orderRes,  })
+  } catch (err) {
+    res.json({ orderRes });
     //res.json({ msg: err.message, details: err.toString(), body: req.body, orderID, orderRes })
   }
-
-})
+});
 
 /**
  * Webhook handlers.
