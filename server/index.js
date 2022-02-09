@@ -133,7 +133,7 @@ app.post("/update-shipping", async (req, res) => {
           // value: data.purchase_units[0].amount,
           value: {
             currency_code: "USD",
-            value: "7.05",
+            value: "8.05",
             breakdown: {
               item_total: {
                 currency_code: "USD",
@@ -145,7 +145,7 @@ app.post("/update-shipping", async (req, res) => {
               },
               shipping: {
                 currency_code: "USD",
-                value: "5.99",
+                value: "4.99",
               },
             },
           }
