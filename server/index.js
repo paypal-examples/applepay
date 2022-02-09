@@ -163,7 +163,7 @@ app.post("/update-shipping", async (req, res) => {
 
     res.json({ msg: "ok", ...orderRes });
   } catch (err) {
-    res.json({ orderRes });
+    res.json({ details: err.details, orderRes, });
     //res.json({ msg: err.message, details: err.toString(), body: req.body, orderID, orderRes })
   }
 });
