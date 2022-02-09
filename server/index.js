@@ -96,7 +96,7 @@ app.post("/calculate-shipping", async (req, res) => {
 
     const {
       breakdown: { item_total, tax_total },
-    } = data.order.purchase_units[0].amount;
+    } = data.purchase_units[0].amount;
   
     const itemTotal = parseFloat(item_total.value, 10);
     const taxAmount = parseFloat(tax_total.value, 10);
