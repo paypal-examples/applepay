@@ -75,6 +75,9 @@ app.post("/update-shipping", async (req, res) => {
   try {
     const { access_token } = await getAccessToken();
 
+    /*
+    * GET Order
+    */
     const { data } = await axios({
       url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderID}`,
       method: "GET",
@@ -111,7 +114,10 @@ app.post("/update-shipping", async (req, res) => {
       shippingMethodAmount
     ).toFixed(2);
     orderRes = data
-    
+
+    /*
+    * PATCH Order
+    */
     await axios({
       url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderID}`,
       method: "PATCH",

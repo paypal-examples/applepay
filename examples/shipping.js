@@ -146,6 +146,7 @@ paypal
         shippingMethodAmount
       ).toFixed(2);
 
+      console.log(data.amount)
       return fetch(`/orders/${orderID}`, {
         method: "PATCH",
         headers: {
