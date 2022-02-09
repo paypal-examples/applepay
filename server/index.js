@@ -78,11 +78,11 @@ app.patch("/orders/:orderId", async (req, res) => {
 
 app.post("/calculate-shipping", async (req, res) => {
   const { orderID, selected_shipping_option, /*shipping_address,*/ amount } = req.body;
-
+  let orderRes 
   try {
     const { access_token } = await getAccessToken();
 
-    const { data: order } = await axios({
+    const { data } = await axios({
       url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderID}`,
       method: "GET",
       headers: {
@@ -92,9 +92,11 @@ app.post("/calculate-shipping", async (req, res) => {
       }
     });
   
+    orderRes = data
+
     const {
       breakdown: { item_total, tax_total },
-    } = order.purchase_units[0].amount;
+    } = data.order.purchase_units[0].amount;
   
     const itemTotal = parseFloat(item_total.value, 10);
     const taxAmount = parseFloat(tax_total.value, 10);
@@ -135,8 +137,9 @@ app.post("/calculate-shipping", async (req, res) => {
   
     res.json({ msg: "ok" });
   } catch(err){
-    res.json({ msg: err.message, details: err.toString(), body: req.body, orderID, })
+    res.json({ msg: err.message, details: err.toString(), body: req.body, orderID, orderRes })
   }
+
 })
 
 /**
