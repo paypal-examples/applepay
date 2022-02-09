@@ -76,8 +76,9 @@ app.patch("/orders/:orderId", async (req, res) => {
 
 });
 
-app.post("/calculate-shipping", () => {
-
+app.post("/calculate-shipping/:orderId", async (req, res) => {
+  const { orderId } = req.params;
+  res.json({ orderId });
 })
 
 /**
