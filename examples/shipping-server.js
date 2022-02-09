@@ -123,6 +123,7 @@ paypal
           return res.json();
         })
         .then((json) => {
+          console.log(JSON.stringify(json, null, 4))
           console.log(`Successful Order patch call: ${JSON.stringify(json)}`);
           return actions.resolve();
         })
