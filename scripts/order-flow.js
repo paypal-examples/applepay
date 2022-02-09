@@ -54,32 +54,7 @@ async function getOrder(id){
       "Content-Type": "application/json",
       Accept: "application/json",
       Authorization: `Bearer ${access_token}`,
-    },
-    data: {
-      intent: "CAPTURE",
-      purchase_units: [
-        {
-          amount: {
-            currency_code: "USD",
-            value: "7.05",
-            breakdown: {
-              item_total: {
-                currency_code: "USD",
-                value: "1.99",
-              },
-              tax_total: {
-                currency_code: "USD",
-                value: "0.07",
-              },
-              shipping: {
-                currency_code: "USD",
-                value: "4.99",
-              },
-            },
-          },
-        },
-      ],
-    },
+    }
   });
 
   return data
@@ -91,7 +66,7 @@ async function main() {
   const order  = await createOrder()
   console.log(JSON.stringify(order, null, 4))
 
-
+/*
   const body = [
     {
       op: "replace",
@@ -119,6 +94,7 @@ async function main() {
   });
 
   console.log(JSON.stringify(data, null, 4));
+*/
 
   // GET order
   console.log("--- GET ---")

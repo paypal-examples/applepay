@@ -77,7 +77,8 @@ app.patch("/orders/:orderId", async (req, res) => {
 });
 
 app.post("/calculate-shipping", async (req, res) => {
-  const { orderID, selected_shipping_option, /*shipping_address,*/ amount } = req.body;
+  const { orderID, selected_shipping_option } = req.body;
+
   let orderRes 
   try {
     const { access_token } = await getAccessToken();
@@ -112,7 +113,7 @@ app.post("/calculate-shipping", async (req, res) => {
       selected_shipping_option.selected = true;
     }
   
-    amount.value = (
+    data.amount.value = (
       itemTotal +
       taxAmount +
       shippingMethodAmount
@@ -130,7 +131,7 @@ app.post("/calculate-shipping", async (req, res) => {
         {
           op: "replace",
           path: "/purchase_units/@reference_id=='default'/amount",
-          value: amount,
+          value: data.amount,
         },
       ]),
     });
