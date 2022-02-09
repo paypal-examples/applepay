@@ -132,8 +132,22 @@ app.post("/update-shipping", async (req, res) => {
           path: "/purchase_units/@reference_id=='default'/amount",
           // value: data.purchase_units[0].amount,
           value: {
-            currency_code: "USD", 
-            value: "99.99"//data.purchase_units[0].amount.value
+            currency_code: "USD",
+            value: "7.05",
+            breakdown: {
+              item_total: {
+                currency_code: "USD",
+                value: "2.99",
+              },
+              tax_total: {
+                currency_code: "USD",
+                value: "0.07",
+              },
+              shipping: {
+                currency_code: "USD",
+                value: "5.99",
+              },
+            },
           }
         },
       ]),
