@@ -178,7 +178,7 @@ paypal
 
       /*
        * Handle Shipping Address Changes - example shipping to us only
-       */
+     
       if (data.shipping_address?.country_code !== "us") {
         // https://developer.apple.com/documentation/apple_pay_on_the_web/applepayerrorcode
         // https://developer.apple.com/documentation/apple_pay_on_the_web/applepayerror
@@ -190,7 +190,8 @@ paypal
           )
         );
       }
-
+  */
+ 
       /*
        * Handle Shipping Option Update
        */
