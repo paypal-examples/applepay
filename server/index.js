@@ -81,6 +81,8 @@ app.post("/update-shipping", async (req, res) => {
   const { orderID, /* shipping_address */ selected_shipping_option } = req.body;
 
   let orderRes;
+  let patchRes
+
   try {
     const { access_token } = await getAccessToken();
 
@@ -127,7 +129,7 @@ app.post("/update-shipping", async (req, res) => {
     /*
      * PATCH Order
      */
-    await axios({
+    patchRes = await axios({
       url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderID}`,
       method: "PATCH",
       headers: {
@@ -163,7 +165,7 @@ app.post("/update-shipping", async (req, res) => {
 
     res.json({ msg: "ok", ...orderRes });
   } catch (err) {
-    res.json({ msg: err.message, details: err.toString(), orderRes, });
+    res.json({ ...patchRes.data, msg: err.message, details: err.toString(), orderRes, });
     //res.json({ msg: err.message, details: err.toString(), body: req.body, orderID, orderRes })
   }
 });
