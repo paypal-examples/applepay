@@ -39,10 +39,10 @@ const order = {
           id: "1",
           amount: {
             currency_code: "USD",
-            value: "0.00",
+            value: "1.00",
           },
           type: "SHIPPING",
-          label: "free Shipping",
+          label: "Basic Shipping",
           selected: true,
         },
       ],
@@ -130,3 +130,5 @@ paypal
     },
   })
   .render("#applepay-btn");
+
+
