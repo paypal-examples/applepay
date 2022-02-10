@@ -1,63 +1,4 @@
 /* eslint-disable  no-alert, no-unused-vars */
-const shippingOptions = [
-  {
-    id: "1",
-    amount: {
-      currency_code: "USD",
-      value: "4.99",
-    },
-    type: "SHIPPING",
-    label: "🚛 Ground Shipping (2 days)",
-    selected: true,
-  },
-  {
-    id: "2",
-    amount: {
-      currency_code: "USD",
-      value: "24.99",
-    },
-    type: "SHIPPING",
-    label: "🚀 Drone Express (2 hours)",
-    selected: false,
-  },
-];
-
-const selectedShippingAmount = shippingOptions.find((option) => option.selected).amount;
-
-const breakdown = {
-  item_total: {
-    currency_code: "USD",
-    value: "1.99",
-  },
-  tax_total: {
-    currency_code: "USD",
-    value: "0.07",
-  },
-  shipping: selectedShippingAmount,
-};
-
-const breakdownTotalValue = Object.values(breakdown)
-  .reduce((total, item) => (total += parseFloat(item.value, 10)), 0)
-  .toFixed(2)
-  .toString();
-
-const amount = {
-  currency_code: "USD",
-  value: breakdownTotalValue,
-  breakdown,
-};
-
-const shippingAddress = {
-  shipping_name: "John Doe",
-  phone: "5109323432",
-  address_line_1: "123 Townsend St",
-  address_line_2: "Floor 6",
-  admin_area_1: "CA",
-  admin_area_2: "San Francisco",
-  postal_code: "94107",
-  country_code: "US",
-  address_details: {},
-};
 
 const order = {
   purchase_units: [
@@ -65,16 +6,63 @@ const order = {
       payee: {
         merchant_id: "XWVWZ4HG4YH9N",
       },
-      amount: amount,
+      amount: {
+        currency_code: "USD",
+        value: "7.05",
+        breakdown: {
+          item_total: {
+            currency_code: "USD",
+            value: "1.99",
+          },
+          tax_total: {
+            currency_code: "USD",
+            value: "0.07",
+          },
+          shipping: {
+            currency_code: "USD",
+            value: "4.99",
+          },
+        },
+      },
       shipping: {
-        address: shippingAddress,
+        address: {
+          shipping_name: "John Doe",
+          phone: "5109323432",
+          address_line_1: "123 Townsend St",
+          address_line_2: "Floor 6",
+          admin_area_1: "CA",
+          admin_area_2: "San Francisco",
+          postal_code: "94107",
+          country_code: "US",
+          address_details: {},
+        },
         method: "USPS",
-        options: shippingOptions,
-      }
-    }
-  ]
-}
-
+        options: [
+          {
+            id: "1",
+            amount: {
+              currency_code: "USD",
+              value: "4.99",
+            },
+            type: "SHIPPING",
+            label: "🚛 Ground Shipping (2 days)",
+            selected: true,
+          },
+          {
+            id: "2",
+            amount: {
+              currency_code: "USD",
+              value: "24.99",
+            },
+            type: "SHIPPING",
+            label: "🚀 Drone Express (2 hours)",
+            selected: false,
+          },
+        ],
+      },
+    },
+  ],
+};
 
 paypal
   .Buttons({
@@ -128,6 +116,9 @@ paypal
 
       const itemTotal = parseFloat(item_total.value, 10);
       const taxAmount = parseFloat(tax_total.value, 10);
+
+
+//      const selectedShippingAmount = shippingOptions.find((option) => option.selected).amount;
 
       let shippingMethodAmount = parseFloat("0.00", 10);
       

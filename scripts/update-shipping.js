@@ -115,10 +115,10 @@ async function main() {
     },
     orderID: "2R054996TS7668052",
     shipping_address: {
-      city: "Pleasanton",
+      city: "San Jose",
       state: "CA",
       country_code: "US",
-      postal_code: "94566",
+      postal_code: "12345",
     },
     selected_shipping_option: {
       label: "🚀 Drone Express (2 hours)",
@@ -188,7 +188,7 @@ async function main() {
       op: "replace",
       path: "/purchase_units/@reference_id=='default'/amount",
       value: {
-        currency_code: "USD",
+        /*currency_code: "USD",
         value: "9.05",
         breakdown: {
           item_total: {
@@ -203,8 +203,8 @@ async function main() {
             currency_code: "USD",
             value: "5.99",
           },
-        },
-        /*
+        },*/
+        
         currency_code: "USD",
         value: data.amount.value,
         breakdown: {
@@ -221,7 +221,6 @@ async function main() {
             value: shippingMethodAmount.toString(),
           },
         },
-        */
       },
     },
   ];
