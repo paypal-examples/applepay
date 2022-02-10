@@ -111,17 +111,19 @@ paypal
        * Handle Shipping Option Update
        */
       const {
-        breakdown: { item_total, tax_total },
+        breakdown,
       } = order.purchase_units[0].amount;
 
-      const itemTotal = parseFloat(item_total.value, 10);
-      const taxAmount = parseFloat(tax_total.value, 10);
+      const itemTotal = parseFloat(breakdown.item_total.value, 10);
+      const taxAmount = parseFloat(breakdown.tax_total.value, 10);
 
+      const defaultShipping =
+        order.purchase_units[0].shipping.options.find(
+          (option) => option.selected
+        );
 
-//      const selectedShippingAmount = shippingOptions.find((option) => option.selected).amount;
+      let shippingMethodAmount = parseFloat(defaultShipping.amount.value, 10);
 
-      let shippingMethodAmount = parseFloat("0.00", 10);
-      
       if (selected_shipping_option?.amount?.value) {
         shippingMethodAmount = parseFloat(
           selected_shipping_option.amount.value,
@@ -130,7 +132,7 @@ paypal
 
         data.selected_shipping_option.selected = true;
       }
-      
+
       data.amount.value = (
         itemTotal +
         taxAmount +

@@ -67,13 +67,7 @@ app.patch("/orders/:orderId", async (req, res) => {
     console.log(`Payment patched!`);
     res.json(data);
   } catch (err) {
-    console.log(err);
-    res.json({
-      msg: err.message,
-      details: err.toString(),
-      body: req.body,
-      orderId,
-    });
+    res.status(422).json(err.response.data);
   }
 });
 
