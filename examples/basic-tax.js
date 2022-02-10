@@ -65,11 +65,17 @@ const order = {
 };
 
 async function caculateShipping(shippingAddress) {
-  console.log("Tax update for postcode %s", shippingAddress.postal_code);
+  // random sales tax rate 0 - 10%
+  const taxRate = ((Math.random() * 10) / 100).toFixed(2);
+
+  console.log(
+    "Fake Sales Tax update %s % for postcode %s",
+    (parseFloat(taxRate, 10) * 100).toFixed(2),
+    shippingAddress.postal_code
+  );
 
   return {
-    // random sales tax rate 0 - 10%
-    taxRate: (Math.random() * 10).toFixed(2),
+    taxRate,
   };
 }
 
