@@ -24,6 +24,15 @@ const order = {
   ],
 };
 
+async function caculateShipping(shippingAddress){
+  console.log("Tax update for postcode %s", shippingAddress.postal_code)
+
+  return {
+    // random sales tax rate 0 - 10%
+    taxRate: (Math.random() * 10).toFixed(2)
+  }
+}
+
 paypal
   .Buttons({
     fundingSource: paypal.FUNDING.APPLEPAY,
@@ -46,5 +55,50 @@ paypal
         })
         .catch(console.error);
     },
+    onShippingChange(data, actions) {
+      console.log("onShippingChange");
+      console.log(JSON.stringify(data, null, 4));
+
+      return fetch(`/orders/${data.orderID}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify([
+          {
+            op: "replace",
+            path: "/purchase_units/@reference_id=='default'/amount",
+            value: {
+              currency_code: "USD",
+              value: "1.30",
+              breakdown: {
+                item_total: {
+                  currency_code: "USD",
+                  value: "1.00",
+                },
+                tax_total: {
+                  currency_code: "USD",
+                  value: "0.30",
+                }
+              }
+            },
+          },
+        ]),
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("patching order");
+          }
+          return res.json();
+        })
+        .then((json) => {
+          console.log(`Successful Order patch call: ${JSON.stringify(json)}`);
+          return actions.resolve();
+        })
+        .catch((err) => {
+          return actions.reject(err);
+        });
+
+    }
   })
   .render("#applepay-btn");
