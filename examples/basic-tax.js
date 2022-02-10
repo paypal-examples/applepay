@@ -96,8 +96,31 @@ paypal
         .catch(console.error);
     },
     onShippingChange(data, actions) {
+      const { breakdown } = order.purchase_units[0].amount;
+
       caculateShipping(data.shipping_address)
         .then(({ taxRate }) => {
+          const itemTotal = parseFloat(breakdown.item_total.value, 10);
+          const taxAmount = parseFloat(taxRate, 10) * itemTotal;
+
+          const defaultShipping = order.purchase_units[0].shipping.options.find(
+            (option) => option.selected
+          );
+
+          let shippingMethodAmount = parseFloat(
+            defaultShipping.amount.value,
+            10
+          );
+
+          if (data.selected_shipping_option?.amount?.value) {
+            shippingMethodAmount = parseFloat(
+              data.selected_shipping_option.amount.value,
+              10
+            );
+
+            data.selected_shipping_option.selected = true;
+          }
+
           fetch(`/orders/${data.orderID}`, {
             method: "PATCH",
             headers: {
@@ -109,19 +132,21 @@ paypal
                 path: "/purchase_units/@reference_id=='default'/amount",
                 value: {
                   currency_code: "USD",
-                  value: "7.06",
+                  value: (itemTotal + taxAmount + shippingMethodAmount).toFixed(
+                    2
+                  ),
                   breakdown: {
                     item_total: {
                       currency_code: "USD",
-                      value: "1.99",
+                      value: itemTotal.toFixed(2),
                     },
                     tax_total: {
                       currency_code: "USD",
-                      value: "0.08",
+                      value: taxAmount.toFixed(2),
                     },
                     shipping: {
                       currency_code: "USD",
-                      value: "4.99",
+                      value: shippingMethodAmount.toFixed(2),
                     },
                   },
                 },
@@ -148,5 +173,3 @@ paypal
     },
   })
   .render("#applepay-btn");
-
-
