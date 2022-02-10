@@ -8,15 +8,19 @@ const order = {
       },
       amount: {
         currency_code: "USD",
-        value: "1.20",
+        value: "7.05",
         breakdown: {
           item_total: {
             currency_code: "USD",
-            value: "1.00",
+            value: "1.99",
           },
           tax_total: {
             currency_code: "USD",
-            value: "0.20",
+            value: "0.07",
+          },
+          shipping: {
+            currency_code: "USD",
+            value: "4.99",
           },
         },
       },
@@ -32,20 +36,30 @@ const order = {
           country_code: "US",
           address_details: {},
         },
-      },
-      method: "USPS",
-      options: [
-        {
-          id: "1",
-          amount: {
-            currency_code: "USD",
-            value: "1.00",
+        method: "USPS",
+        options: [
+          {
+            id: "1",
+            amount: {
+              currency_code: "USD",
+              value: "4.99",
+            },
+            type: "SHIPPING",
+            label: "🚛 Ground Shipping (2 days)",
+            selected: true,
           },
-          type: "SHIPPING",
-          label: "Basic Shipping",
-          selected: true,
-        },
-      ],
+          {
+            id: "2",
+            amount: {
+              currency_code: "USD",
+              value: "24.99",
+            },
+            type: "SHIPPING",
+            label: "🚀 Drone Express (2 hours)",
+            selected: false,
+          },
+        ],
+      },
     },
   ],
 };
@@ -95,15 +109,19 @@ paypal
                 path: "/purchase_units/@reference_id=='default'/amount",
                 value: {
                   currency_code: "USD",
-                  value: "1.30",
+                  value: "7.06",
                   breakdown: {
                     item_total: {
                       currency_code: "USD",
-                      value: "1.00",
+                      value: "1.99",
                     },
                     tax_total: {
                       currency_code: "USD",
-                      value: "0.30",
+                      value: "0.08",
+                    },
+                    shipping: {
+                      currency_code: "USD",
+                      value: "4.99",
                     },
                   },
                 },
