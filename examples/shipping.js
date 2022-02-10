@@ -1,5 +1,4 @@
 /* eslint-disable  no-alert, no-unused-vars */
-
 const shippingOptions = [
   {
     id: "1",
@@ -24,7 +23,7 @@ const shippingOptions = [
 ];
 
 const selectedShippingAmount = shippingOptions.find((option) => option.selected).amount;
-  
+
 const breakdown = {
   item_total: {
     currency_code: "USD",
@@ -71,10 +70,11 @@ const order = {
         address: shippingAddress,
         method: "USPS",
         options: shippingOptions,
-      },
-    },
-  ],
-};
+      }
+    }
+  ]
+}
+
 
 paypal
   .Buttons({
@@ -130,7 +130,7 @@ paypal
       const taxAmount = parseFloat(tax_total.value, 10);
 
       let shippingMethodAmount = parseFloat("0.00", 10);
-
+      
       if (selected_shipping_option?.amount?.value) {
         shippingMethodAmount = parseFloat(
           selected_shipping_option.amount.value,
@@ -139,14 +139,13 @@ paypal
 
         data.selected_shipping_option.selected = true;
       }
-
+      
       data.amount.value = (
         itemTotal +
         taxAmount +
         shippingMethodAmount
       ).toFixed(2);
 
-      console.log(data.amount)
       return fetch(`/orders/${orderID}`, {
         method: "PATCH",
         headers: {
