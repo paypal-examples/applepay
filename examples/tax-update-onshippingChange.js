@@ -64,15 +64,18 @@ const order = {
   ],
 };
 
-async function caculateShipping(shippingAddress) {
-  // random sales tax rate 0 - 10%
-  const taxRate = ((Math.random() * 10) / 100).toFixed(2);
+async function caculateShipping({ shipping_address }) {
+  const res = await fetch("/calculate-shipping", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      shipping_address,
+    }),
+  });
 
-  console.log(
-    "Fake Sales Tax update %s % for postcode %s",
-    (parseFloat(taxRate, 10) * 100).toFixed(2),
-    shippingAddress.postal_code
-  );
+  const { taxRate } = await res.json();
 
   return {
     taxRate,
@@ -104,10 +107,10 @@ paypal
     onShippingChange(data, actions) {
       const { breakdown } = order.purchase_units[0].amount;
 
-      caculateShipping(data.shipping_address)
+      caculateShipping(data)
         .then(({ taxRate }) => {
           const itemTotal = parseFloat(breakdown.item_total.value, 10);
-          const taxAmount = parseFloat(taxRate, 10) * itemTotal;
+          const taxTotal = parseFloat(taxRate, 10) * itemTotal;
 
           const defaultShipping = order.purchase_units[0].shipping.options.find(
             (option) => option.selected
@@ -127,20 +130,24 @@ paypal
             data.selected_shipping_option.selected = true;
           }
 
+          const totalAmountValue = (itemTotal + taxTotal + shippingMethodAmount)
+
           fetch(`/orders/${data.orderID}`, {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify([
+              /* 
+              * PATCH order amount with updated tax and total
+              * https://developer.paypal.com/docs/checkout/standard/customize/shipping-options/
+              */
               {
                 op: "replace",
                 path: "/purchase_units/@reference_id=='default'/amount",
                 value: {
                   currency_code: "USD",
-                  value: (itemTotal + taxAmount + shippingMethodAmount).toFixed(
-                    2
-                  ),
+                  value: totalAmountValue.toFixed(2),
                   breakdown: {
                     item_total: {
                       currency_code: "USD",
@@ -148,7 +155,7 @@ paypal
                     },
                     tax_total: {
                       currency_code: "USD",
-                      value: taxAmount.toFixed(2),
+                      value: taxTotal.toFixed(2),
                     },
                     shipping: {
                       currency_code: "USD",

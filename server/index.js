@@ -71,6 +71,24 @@ app.patch("/orders/:orderId", async (req, res) => {
   }
 });
 
+app.post("/calculate-shipping", (req, res) => {
+  const {
+    shipping_address, 
+  } = req.body
+
+  const { postal_code } = shipping_address
+
+  // random sales tax rate 0 - 10%
+  const taxRate = ((Math.random() * 10) / 100).toFixed(2);
+
+  console.log(`Fake Sales Tax Rate ${taxRate}% for postalcode ${postal_code}`)
+
+  res.json({
+    taxRate,
+
+  })
+})
+
 app.post("/update-shipping", async (req, res) => {
   const { orderID, /* shipping_address */ selected_shipping_option } = req.body;
 
