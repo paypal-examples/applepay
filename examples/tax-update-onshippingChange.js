@@ -8,19 +8,19 @@ const order = {
       },
       amount: {
         currency_code: "USD",
-        value: "7.05",
+        value: "24.97",
         breakdown: {
           item_total: {
             currency_code: "USD",
-            value: "1.99",
+            value: "19.99",
           },
           tax_total: {
             currency_code: "USD",
-            value: "0.07",
+            value: "1.99",
           },
           shipping: {
             currency_code: "USD",
-            value: "4.99",
+            value: "2.99",
           },
         },
       },
@@ -39,30 +39,31 @@ const order = {
         method: "USPS",
         options: [
           {
-            id: "1",
-            amount: {
-              currency_code: "USD",
-              value: "4.99",
-            },
-            type: "SHIPPING",
-            label: "🚛 Ground Shipping (2 days)",
-            selected: true,
+              id: "SHIP_123",
+              label: "1-3 Day Shipping",
+              type: "SHIPPING",
+              selected: true,
+              amount: {
+                  value: "2.99",
+                  currency_code: "USD"
+              }
           },
           {
-            id: "2",
-            amount: {
-              currency_code: "USD",
-              value: "24.99",
-            },
-            type: "SHIPPING",
-            label: "🚀 Drone Express (2 hours)",
-            selected: false,
-          },
-        ],
+              id: "SHIP_456",
+              label: "Pick up in Store",
+              type: "PICKUP",
+              selected: false,
+              amount: {
+                  value: "0.00",
+                  currency_code: "USD"
+              }
+          }
+        ]
       },
     },
   ],
 };
+
 
 async function caculateShipping({ shipping_address }) {
   const res = await fetch("/calculate-shipping", {
@@ -75,10 +76,11 @@ async function caculateShipping({ shipping_address }) {
     }),
   });
 
-  const { taxRate } = await res.json();
+  const { taxRate, updatedShippingOptions } = await res.json();
 
   return {
     taxRate,
+    updatedShippingOptions
   };
 }
 
