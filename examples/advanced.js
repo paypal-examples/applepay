@@ -108,6 +108,8 @@ paypal
     },
     onShippingChange(data, actions) {
       const { breakdown } = order.purchase_units[0].amount;
+      const { shipping } = order.purchase_units[0]
+
       console.log(JSON.stringify(data, null, 4))
       caculateShipping(data)
         .then(({ taxRate }) => {
@@ -154,6 +156,18 @@ paypal
                   postal_code: data.shipping_address.postal_code,
                   country_code: data.shipping_address.country_code,
                 },
+              },
+
+              /* 
+              * PATCH shipping options
+              */
+              {
+                op: "replace",
+                path: "/purchase_units/@reference_id=='default'/shipping/options",
+                value: shipping.options.map(option => ({
+                  ...option,
+                  selected: option.label === data.selected_shipping_option.label
+                })),
               },
               /* 
               * PATCH order amount with updated tax and total

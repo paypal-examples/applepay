@@ -142,6 +142,8 @@ async function main() {
     breakdown: { item_total, tax_total },
   } = order.purchase_units[0].amount;
 
+  const { shipping } = order.purchase_units[0]
+
   const itemTotal = parseFloat(item_total.value, 10);
   const taxAmount = parseFloat(tax_total.value, 10);
 
@@ -184,6 +186,14 @@ async function main() {
   );
 
   const body = [
+    {
+      op: "replace",
+      path: "/purchase_units/@reference_id=='default'/shipping/options",
+      value: shipping.options.map(option => ({
+        ...option,
+        selected: option.label === data.selected_shipping_option.label
+      })),
+    },
     /*
      * PATCH Address
      */
@@ -202,7 +212,7 @@ async function main() {
     /*
      * PATCH Amount
      */
-    /*{
+    {
       op: "replace",
       path: "/purchase_units/@reference_id=='default'/amount",
       value: {
@@ -223,7 +233,7 @@ async function main() {
           },
         },
       },
-    },*/
+    },
   ];
 
   // PATCH order
