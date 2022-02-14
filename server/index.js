@@ -72,145 +72,50 @@ app.patch("/orders/:orderId", async (req, res) => {
 });
 
 app.post("/calculate-shipping", (req, res) => {
-  const {
-    shipping_address, 
-  } = req.body
+  const { shipping_address } = req.body;
 
-  const { postal_code } = shipping_address
+  const { postal_code } = shipping_address;
 
   /*
-  * Calc Sales Tax
-  */
+   * Calc Sales Tax
+   */
   // random sales tax rate 0 - 10%
   const taxRate = ((Math.random() * 10) / 100).toFixed(2);
 
-  console.log(`Fake Sales Tax Rate ${taxRate}% for postalcode ${postal_code}`)
+  console.log(`Fake Sales Tax Rate ${taxRate}% for postalcode ${postal_code}`);
 
   /*
-  * Get updated shipping options:
-  * if there is a change in shipping address geographically different shipping options may now apply
-  * pass these back here.
-  */
+   * Get updated shipping options:
+   * if there is a change in shipping address geographically different shipping options may now apply
+   * pass these back here if so.
+   */
   const updatedShippingOptions = [
     {
-        id: "SHIP_123",
-        label: "1-3 Day Shipping",
-        type: "SHIPPING",
-        selected: true,
-        amount: {
-            value: "2.99",
-            currency_code: "USD"
-        }
+      id: "SHIP_123",
+      label: "1-3 Day Shipping",
+      type: "SHIPPING",
+      selected: true,
+      amount: {
+        value: "2.99",
+        currency_code: "USD",
+      },
     },
     {
-        id: "SHIP_456",
-        label: "Pick up in Store",
-        type: "PICKUP",
-        selected: false,
-        amount: {
-            value: "0.00",
-            currency_code: "USD"
-        }
-    }
-  ]
+      id: "SHIP_456",
+      label: "Pick up in Store",
+      type: "PICKUP",
+      selected: false,
+      amount: {
+        value: "0.00",
+        currency_code: "USD",
+      },
+    },
+  ];
 
   res.json({
     taxRate,
-    updatedShippingOptions
-  })
-})
-
-app.post("/update-shipping", async (req, res) => {
-  const { orderID, /* shipping_address */ selected_shipping_option } = req.body;
-
-  let orderRes;
-  //let patchRes
-
-  try {
-    const { access_token } = await getAccessToken();
-
-    /*
-     * GET Order
-     */
-    const { data } = await axios({
-      url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderID}`,
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
-
-    orderRes = data;
-
-    const {
-      breakdown: { item_total, tax_total },
-    } = data.purchase_units[0].amount;
-
-    const itemTotal = parseFloat(item_total.value, 10);
-    const taxAmount = parseFloat(tax_total.value, 10);
-
-    let shippingMethodAmount = parseFloat("0.00", 10);
-
-    if (selected_shipping_option.amount.value) {
-      shippingMethodAmount = parseFloat(
-        selected_shipping_option.amount.value,
-        10
-      );
-
-      selected_shipping_option.selected = true;
-    }
-
-    data.purchase_units[0].amount.value = (
-      itemTotal +
-      taxAmount +
-      shippingMethodAmount
-    ).toFixed(2);
-    orderRes = data;
-
-    /*
-     * PATCH Order
-     */
-    await axios({
-      url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderID}`,
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
-      data: JSON.stringify([
-        {
-          op: "replace",
-          path: "/purchase_units/@reference_id=='default'/amount",
-          value: {
-            currency_code: "USD",
-            value: (itemTotal + taxAmount + shippingMethodAmount).toFixed(2),
-            breakdown: {
-              item_total: {
-                currency_code: "USD",
-                value: itemTotal,
-              },
-              tax_total: {
-                currency_code: "USD",
-                value: taxAmount,
-              },
-              shipping: {
-                currency_code: "USD",
-                value: shippingMethodAmount,
-              },
-            },
-          },
-        },
-      ]),
-    });
-
-    res.json({ msg: "ok", ...orderRes });
-  } catch (err) {
-    res.json({ msg: err.message, details: err.toString(), orderRes, });
-    //res.json({ msg: err.message, details: err.toString(), body: req.body, orderID, orderRes })
-  }
+    updatedShippingOptions,
+  });
 });
 
 /**
