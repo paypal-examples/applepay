@@ -107,21 +107,19 @@ paypal
         .catch(console.error);
     },
     onShippingChange(data, actions) {
-      const { breakdown } = order.purchase_units[0].amount;
-      const { shipping } = order.purchase_units[0]
-
       console.log(JSON.stringify(data, null, 4))
+
+      const { amount, shipping } = order.purchase_units[0];
+
       caculateShipping(data)
         .then(({ taxRate }) => {
-          const itemTotal = parseFloat(breakdown.item_total.value, 10);
+          const itemTotal = parseFloat(amount.breakdown.item_total.value, 10);
           const taxTotal = parseFloat(taxRate, 10) * itemTotal;
 
-          const defaultShipping = order.purchase_units[0].shipping.options.find(
-            (option) => option.selected
-          );
-
           let shippingMethodAmount = parseFloat(
-            defaultShipping.amount.value,
+            shipping.options.find(
+              (option) => option.selected
+            ).amount.value,
             10
           );
 
@@ -131,7 +129,7 @@ paypal
               10
             );
 
-            data.selected_shipping_option.selected = true;
+           // data.selected_shipping_option.selected = true;
           }
 
           const totalAmountValue = (itemTotal + taxTotal + shippingMethodAmount)
@@ -145,7 +143,7 @@ paypal
               // https://developer.paypal.com/api/orders/v2/#orders_patch
 
               /*
-              * PATCH Shipping Address - with updated selection
+              * Shipping Address
               */
               {
                 op: "replace",
@@ -159,7 +157,7 @@ paypal
               },
 
               /* 
-              * PATCH shipping options
+              * Shipping Options
               */
               {
                 op: "replace",
@@ -169,9 +167,9 @@ paypal
                   selected: option.label === data.selected_shipping_option.label
                 })),
               },
+
               /* 
-              * PATCH order amount with updated tax and total
-              * https://developer.paypal.com/docs/checkout/standard/customize/shipping-options/
+              * Order Amount w/ Breakdown
               */
               {
                 op: "replace",
