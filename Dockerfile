@@ -8,6 +8,6 @@ ARG CLIENT_SECRET
 ENV CLIENT_ID=$CLIENT_ID
 ENV CLIENT_SECRET=$CLIENT_SECRET
 
-RUN npm install --ignore-scripts
+RUN npm ci
 
 CMD node server/index.js
