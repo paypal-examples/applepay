@@ -64,7 +64,10 @@ const order = {
   ],
 };
 
-async function caculateShipping({ shipping_address }) {
+async function caculateShipping({
+  shipping_address,
+  selected_shipping_option,
+}) {
   const res = await fetch("/calculate-shipping", {
     method: "post",
     headers: {
@@ -72,14 +75,17 @@ async function caculateShipping({ shipping_address }) {
     },
     body: JSON.stringify({
       shipping_address,
+      selected_shipping_option,
     }),
   });
 
-  const { taxRate, updatedShippingOptions } = await res.json();
+  const { taxRate, isShippingTaxable, updatedShippingOptions } =
+    await res.json();
 
   return {
     taxRate,
     updatedShippingOptions,
+    isShippingTaxable,
   };
 }
 
@@ -111,7 +117,7 @@ paypal
       const { amount, shipping } = order.purchase_units[0];
 
       caculateShipping(data)
-        .then(({ taxRate, isShippingTaxable }) => {
+        .then(({ taxRate, isShippingTaxable, updatedShippingOptions }) => {
           const itemTotal = parseFloat(amount.breakdown.item_total.value, 10);
 
           const shippingMethodAmount = parseFloat(
@@ -153,11 +159,13 @@ paypal
               {
                 op: "replace",
                 path: "/purchase_units/@reference_id=='default'/shipping/options",
-                value: shipping.options.map((option) => ({
-                  ...option,
-                  selected:
-                    option.label === data.selected_shipping_option.label,
-                })),
+                value: updatedShippingOptions
+                  ? updatedShippingOptions
+                  : shipping.options.map((option) => ({
+                      ...option,
+                      selected:
+                        option.label === data.selected_shipping_option.label,
+                    })),
               },
 
               /*

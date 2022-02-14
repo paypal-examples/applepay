@@ -72,7 +72,7 @@ app.patch("/orders/:orderId", async (req, res) => {
 });
 
 app.post("/calculate-shipping", (req, res) => {
-  const { shipping_address } = req.body;
+  const { shipping_address, selected_shipping_option } = req.body;
 
   const { postal_code } = shipping_address;
 
@@ -86,9 +86,8 @@ app.post("/calculate-shipping", (req, res) => {
   /*
    * Get updated shipping options:
    * if there is a change in shipping address geographically different shipping options may now apply
-   * pass these back here if so.
    */
-  const updatedShippingOptions = [
+  let updatedShippingOptions = [
     {
       id: "SHIP_123",
       label: "1-3 Day Shipping",
@@ -111,17 +110,28 @@ app.post("/calculate-shipping", (req, res) => {
     },
   ];
 
+  const hasSelectedOption = updatedShippingOptions.find(
+    (option) => option.label !== selected_shipping_option.label
+  );
+
+  if(hasSelectedOption){
+    updatedShippingOptions = updatedShippingOptions.map(option => ({
+      ...option,
+      selected: option.label === selected_shipping_option.label
+    })) 
+  }
+
   /*
-  * is shipping taxable ? 
-  * Some states it’s taxable. Others it’s not
-  * https://www.taxjar.com/blog/08-21-sales-tax-and-shipping
-  */
-  const isShippingTaxable = false
+   * isShippingTaxable ?
+   * Some states it’s taxable. Others it’s not
+   * https://www.taxjar.com/blog/08-21-sales-tax-and-shipping
+   */
+  const isShippingTaxable = false;
 
   res.json({
     taxRate,
     updatedShippingOptions,
-    isShippingTaxable
+    isShippingTaxable,
   });
 });
 
