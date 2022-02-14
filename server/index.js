@@ -79,8 +79,7 @@ app.post("/calculate-shipping", (req, res) => {
   /*
    * Calc Sales Tax
    */
-  // random sales tax rate 0 - 10%
-  const taxRate = ((Math.random() * 10) / 100).toFixed(2);
+  const taxRate = ((Math.random() * 10) / 100).toFixed(2); // tax rate 0 - 10%
 
   console.log(`Fake Sales Tax Rate ${taxRate}% for postalcode ${postal_code}`);
 
@@ -112,9 +111,17 @@ app.post("/calculate-shipping", (req, res) => {
     },
   ];
 
+  /*
+  * is shipping taxable ? 
+  * Some states it’s taxable. Others it’s not
+  * https://www.taxjar.com/blog/08-21-sales-tax-and-shipping
+  */
+  const isShippingTaxable = false
+
   res.json({
     taxRate,
     updatedShippingOptions,
+    isShippingTaxable
   });
 });
 

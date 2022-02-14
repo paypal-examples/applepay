@@ -39,31 +39,30 @@ const order = {
         method: "USPS",
         options: [
           {
-              id: "SHIP_123",
-              label: "1-3 Day Shipping",
-              type: "SHIPPING",
-              selected: true,
-              amount: {
-                  value: "2.99",
-                  currency_code: "USD"
-              }
+            id: "SHIP_123",
+            label: "1-3 Day Shipping",
+            type: "SHIPPING",
+            selected: true,
+            amount: {
+              value: "2.99",
+              currency_code: "USD",
+            },
           },
           {
-              id: "SHIP_456",
-              label: "Pick up in Store",
-              type: "PICKUP",
-              selected: false,
-              amount: {
-                  value: "0.00",
-                  currency_code: "USD"
-              }
-          }
-        ]
+            id: "SHIP_456",
+            label: "Pick up in Store",
+            type: "PICKUP",
+            selected: false,
+            amount: {
+              value: "0.00",
+              currency_code: "USD",
+            },
+          },
+        ],
       },
     },
   ],
 };
-
 
 async function caculateShipping({ shipping_address }) {
   const res = await fetch("/calculate-shipping", {
@@ -80,7 +79,7 @@ async function caculateShipping({ shipping_address }) {
 
   return {
     taxRate,
-    updatedShippingOptions
+    updatedShippingOptions,
   };
 }
 
@@ -107,32 +106,24 @@ paypal
         .catch(console.error);
     },
     onShippingChange(data, actions) {
-      console.log(JSON.stringify(data, null, 4))
+      console.log(JSON.stringify(data, null, 4));
 
       const { amount, shipping } = order.purchase_units[0];
 
       caculateShipping(data)
-        .then(({ taxRate }) => {
+        .then(({ taxRate, isShippingTaxable }) => {
           const itemTotal = parseFloat(amount.breakdown.item_total.value, 10);
-          const taxTotal = parseFloat(taxRate, 10) * itemTotal;
 
-          let shippingMethodAmount = parseFloat(
-            shipping.options.find(
-              (option) => option.selected
-            ).amount.value,
+          const shippingMethodAmount = parseFloat(
+            data.selected_shipping_option.amount.value,
             10
           );
 
-          if (data.selected_shipping_option?.amount?.value) {
-            shippingMethodAmount = parseFloat(
-              data.selected_shipping_option.amount.value,
-              10
-            );
+          const taxTotal = isShippingTaxable
+            ? parseFloat(taxRate, 10) * (itemTotal + shippingMethodAmount)
+            : parseFloat(taxRate, 10) * itemTotal;
 
-           // data.selected_shipping_option.selected = true;
-          }
-
-          const totalAmountValue = (itemTotal + taxTotal + shippingMethodAmount)
+          const totalAmountValue = itemTotal + taxTotal + shippingMethodAmount;
 
           fetch(`/orders/${data.orderID}`, {
             method: "PATCH",
@@ -143,8 +134,8 @@ paypal
               // https://developer.paypal.com/api/orders/v2/#orders_patch
 
               /*
-              * Shipping Address
-              */
+               * Shipping Address
+               */
               {
                 op: "replace",
                 path: "/purchase_units/@reference_id=='default'/shipping/address",
@@ -156,21 +147,22 @@ paypal
                 },
               },
 
-              /* 
-              * Shipping Options
-              */
+              /*
+               * Shipping Options
+               */
               {
                 op: "replace",
                 path: "/purchase_units/@reference_id=='default'/shipping/options",
-                value: shipping.options.map(option => ({
+                value: shipping.options.map((option) => ({
                   ...option,
-                  selected: option.label === data.selected_shipping_option.label
+                  selected:
+                    option.label === data.selected_shipping_option.label,
                 })),
               },
 
-              /* 
-              * Order Amount w/ Breakdown
-              */
+              /*
+               * Order Amount
+               */
               {
                 op: "replace",
                 path: "/purchase_units/@reference_id=='default'/amount",
