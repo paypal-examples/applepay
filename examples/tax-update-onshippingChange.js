@@ -141,16 +141,18 @@ paypal
             },
             body: JSON.stringify([
               // https://developer.paypal.com/api/orders/v2/#orders_patch
+
+              /*
+              * PATCH Shipping Address - with updated selection
+              */
               {
                 op: "replace",
                 path: "/purchase_units/@reference_id=='default'/shipping/address",
                 value: {
-                  address_line_1: "123 UPDATED",
-                  address_line_2: "Floor 6 UPDATED",
-                  admin_area_2: "San Francisco UPDATED",
-                  admin_area_1: "CA",
-                  postal_code: "12345",
-                  country_code: "US",
+                  admin_area_2: data.shipping_address.city,
+                  admin_area_1: data.shipping_address.state.toUpperCase(),
+                  postal_code: data.shipping_address.postal_code,
+                  country_code: data.shipping_address.country_code,
                 },
               },
               /* 
