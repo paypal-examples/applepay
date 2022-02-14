@@ -108,7 +108,7 @@ paypal
     },
     onShippingChange(data, actions) {
       const { breakdown } = order.purchase_units[0].amount;
-
+      console.log(JSON.stringify(data, null, 4))
       caculateShipping(data)
         .then(({ taxRate }) => {
           const itemTotal = parseFloat(breakdown.item_total.value, 10);
@@ -140,6 +140,19 @@ paypal
               "Content-Type": "application/json",
             },
             body: JSON.stringify([
+              // https://developer.paypal.com/api/orders/v2/#orders_patch
+              {
+                op: "replace",
+                path: "/purchase_units/@reference_id=='default'/shipping/address",
+                value: {
+                  address_line_1: "123 UPDATED",
+                  address_line_2: "Floor 6 UPDATED",
+                  admin_area_2: "San Francisco UPDATED",
+                  admin_area_1: "CA",
+                  postal_code: "12345",
+                  country_code: "US",
+                },
+              },
               /* 
               * PATCH order amount with updated tax and total
               * https://developer.paypal.com/docs/checkout/standard/customize/shipping-options/

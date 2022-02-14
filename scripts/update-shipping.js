@@ -184,27 +184,28 @@ async function main() {
   );
 
   const body = [
+    /*
+     * PATCH Address
+     */
     {
+      op: "replace",
+      path: "/purchase_units/@reference_id=='default'/shipping/address",
+      value: {
+        address_line_1: "123 UPDATED",
+        address_line_2: "Floor 6 UPDATED",
+        admin_area_2: "San Francisco UPDATED",
+        admin_area_1: "CA",
+        postal_code: "12345",
+        country_code: "US",
+      },
+    },
+    /*
+     * PATCH Amount
+     */
+    /*{
       op: "replace",
       path: "/purchase_units/@reference_id=='default'/amount",
       value: {
-        /*currency_code: "USD",
-        value: "9.05",
-        breakdown: {
-          item_total: {
-            currency_code: "USD",
-            value: "2.99",
-          },
-          tax_total: {
-            currency_code: "USD",
-            value: "0.07",
-          },
-          shipping: {
-            currency_code: "USD",
-            value: "5.99",
-          },
-        },*/
-        
         currency_code: "USD",
         value: data.amount.value,
         breakdown: {
@@ -222,7 +223,7 @@ async function main() {
           },
         },
       },
-    },
+    },*/
   ];
 
   // PATCH order

@@ -78,14 +78,45 @@ app.post("/calculate-shipping", (req, res) => {
 
   const { postal_code } = shipping_address
 
+  /*
+  * Calc Sales Tax
+  */
   // random sales tax rate 0 - 10%
   const taxRate = ((Math.random() * 10) / 100).toFixed(2);
 
   console.log(`Fake Sales Tax Rate ${taxRate}% for postalcode ${postal_code}`)
 
+  /*
+  * Get updated shipping options:
+  * if there is a change in shipping address geographically different shipping options may now apply
+  * pass these back here.
+  */
+  const updatedShippingOptions = [
+    {
+        id: "SHIP_123",
+        label: "1-3 Day Shipping",
+        type: "SHIPPING",
+        selected: true,
+        amount: {
+            value: "2.99",
+            currency_code: "USD"
+        }
+    },
+    {
+        id: "SHIP_456",
+        label: "Pick up in Store",
+        type: "PICKUP",
+        selected: false,
+        amount: {
+            value: "0.00",
+            currency_code: "USD"
+        }
+    }
+  ]
+
   res.json({
     taxRate,
-
+    updatedShippingOptions
   })
 })
 
