@@ -112,8 +112,6 @@ paypal
         .catch(console.error);
     },
     onShippingChange(data, actions) {
-      console.log(JSON.stringify(data, null, 4));
-
       const { amount, shipping } = order.purchase_units[0];
 
       caculateShipping(data)
