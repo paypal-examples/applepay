@@ -64,10 +64,11 @@ const order = {
   ],
 };
 
-async function caculateShipping({
-  shipping_address,
-  selected_shipping_option,
-}) {
+/*
+* Calculate shipping:
+* returns
+*/
+async function calculateShipping(shipping_address, selected_shipping_option) {
   const res = await fetch("/calculate-shipping", {
     method: "post",
     headers: {
@@ -112,10 +113,14 @@ paypal
         .catch(console.error);
     },
     onShippingChange(data, actions) {
+      const { shipping_address, selected_shipping_option, orderID } = data;
       const { amount, shipping } = order.purchase_units[0];
 
-      caculateShipping(data)
-        .then(({ taxRate, isShippingTaxable, updatedShippingOptions }) => {
+      calculateShipping(shipping_address, selected_shipping_option)
+        .then((update) => {
+          const { taxRate, isShippingTaxable, updatedShippingOptions } =
+            update;
+
           const itemTotal = parseFloat(amount.breakdown.item_total.value, 10);
 
           const shippingMethodAmount = parseFloat(
@@ -147,25 +152,25 @@ paypal
           };
 
           const amountValue = {
-            currency_code: "USD",
+            currency_code: amount.currency_code,
             value: (itemTotal + taxTotal + shippingMethodAmount).toFixed(2),
             breakdown: {
               item_total: {
-                currency_code: "USD",
+                currency_code: amount.currency_code,
                 value: itemTotal.toFixed(2),
               },
               tax_total: {
-                currency_code: "USD",
+                currency_code: amount.currency_code,
                 value: taxTotal.toFixed(2),
               },
               shipping: {
-                currency_code: "USD",
+                currency_code: amount.currency_code,
                 value: shippingMethodAmount.toFixed(2),
               },
             },
           };
-          
-          fetch(`/orders/${data.orderID}`, {
+
+          fetch(`/orders/${orderID}`, {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",

@@ -77,7 +77,7 @@ app.post("/calculate-shipping", (req, res) => {
   const { postal_code } = shipping_address;
 
   /*
-   * Calc Sales Tax
+   * Fetch sales tax rate for postal code
    */
   const taxRate = ((Math.random() * 10) / 100).toFixed(2); // tax rate 0 - 10%
 
@@ -110,10 +110,12 @@ app.post("/calculate-shipping", (req, res) => {
     },
   ];
 
+
   const hasSelectedOption = updatedShippingOptions.find(
     (option) => option.label !== selected_shipping_option.label
   );
 
+  // updated shipping options has selected option
   if(hasSelectedOption){
     updatedShippingOptions = updatedShippingOptions.map(option => ({
       ...option,
@@ -121,13 +123,9 @@ app.post("/calculate-shipping", (req, res) => {
     })) 
   }
 
-  /*
-   * isShippingTaxable ?
-   * Some states it’s taxable. Others it’s not
-   * https://www.taxjar.com/blog/08-21-sales-tax-and-shipping
-   */
+  // is shipping taxable for postal_code
   const isShippingTaxable = false;
-
+  
   res.json({
     taxRate,
     updatedShippingOptions,
