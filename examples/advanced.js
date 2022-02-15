@@ -125,12 +125,48 @@ paypal
             10
           );
 
-          const taxTotal = isShippingTaxable
-            ? parseFloat(taxRate, 10) * (itemTotal + shippingMethodAmount)
-            : parseFloat(taxRate, 10) * itemTotal;
+          let taxTotal = parseFloat(taxRate, 10) * itemTotal;
 
-          const totalAmountValue = itemTotal + taxTotal + shippingMethodAmount;
+          if (isShippingTaxable) {
+            taxTotal =
+              parseFloat(taxRate, 10) * (itemTotal + shippingMethodAmount);
+          }
 
+          let shippingOptions = shipping.options.map((option) => ({
+            ...option,
+            selected: option.label === data.selected_shipping_option.label,
+          }));
+
+          if (updatedShippingOptions) {
+            shippingOptions = updatedShippingOptions;
+          }
+
+          const shippingAddress = {
+            admin_area_2: data.shipping_address.city,
+            admin_area_1: data.shipping_address.state.toUpperCase(),
+            postal_code: data.shipping_address.postal_code,
+            country_code: data.shipping_address.country_code,
+          };
+
+          const amountValue = {
+            currency_code: "USD",
+            value: (itemTotal + taxTotal + shippingMethodAmount).toFixed(2),
+            breakdown: {
+              item_total: {
+                currency_code: "USD",
+                value: itemTotal.toFixed(2),
+              },
+              tax_total: {
+                currency_code: "USD",
+                value: taxTotal.toFixed(2),
+              },
+              shipping: {
+                currency_code: "USD",
+                value: shippingMethodAmount.toFixed(2),
+              },
+            },
+          };
+          
           fetch(`/orders/${data.orderID}`, {
             method: "PATCH",
             headers: {
@@ -145,12 +181,7 @@ paypal
               {
                 op: "replace",
                 path: "/purchase_units/@reference_id=='default'/shipping/address",
-                value: {
-                  admin_area_2: data.shipping_address.city,
-                  admin_area_1: data.shipping_address.state.toUpperCase(),
-                  postal_code: data.shipping_address.postal_code,
-                  country_code: data.shipping_address.country_code,
-                },
+                value: shippingAddress,
               },
 
               /*
@@ -159,13 +190,7 @@ paypal
               {
                 op: "replace",
                 path: "/purchase_units/@reference_id=='default'/shipping/options",
-                value: updatedShippingOptions
-                  ? updatedShippingOptions
-                  : shipping.options.map((option) => ({
-                      ...option,
-                      selected:
-                        option.label === data.selected_shipping_option.label,
-                    })),
+                value: shippingOptions,
               },
 
               /*
@@ -174,24 +199,7 @@ paypal
               {
                 op: "replace",
                 path: "/purchase_units/@reference_id=='default'/amount",
-                value: {
-                  currency_code: "USD",
-                  value: totalAmountValue.toFixed(2),
-                  breakdown: {
-                    item_total: {
-                      currency_code: "USD",
-                      value: itemTotal.toFixed(2),
-                    },
-                    tax_total: {
-                      currency_code: "USD",
-                      value: taxTotal.toFixed(2),
-                    },
-                    shipping: {
-                      currency_code: "USD",
-                      value: shippingMethodAmount.toFixed(2),
-                    },
-                  },
-                },
+                value: amountValue,
               },
             ]),
           })
