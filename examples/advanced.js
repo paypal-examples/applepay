@@ -65,8 +65,7 @@ const order = {
 };
 
 /*
-* Calculate shipping:
-* returns
+* Calculate shipping
 */
 async function calculateShipping(shipping_address, selected_shipping_option) {
   const res = await fetch("/calculate-shipping", {

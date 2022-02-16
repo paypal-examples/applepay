@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    
+
     <title>Basic Example</title>
 
     <link
@@ -17,11 +17,32 @@
     <link href="./styles.css" rel="stylesheet" />
   </head>
   <body>
-  
     <h3>Basic</h3>
+    <h6>Basic order amount</h6>
+    <br />
+
     <div id="applepay-mark"></div>
 
     <div id="applepay-btn"></div>
+
+    <br />
+    <pre>
+    <code>
+const order = {
+  purchase_units: [
+    {
+      payee: {
+        merchant_id: "XWVWZ4HG4YH9N",
+      },
+      amount: {
+        currency_code: "USD",
+        value: "7.05",
+      },
+    },
+  ],
+};
+    </code>
+    </pre>
 
     <script
       src="https://www.paypal.com/sdk/js?client-id=AZxSR8Zv4SOvF2dFSzL4mOC09tJySDtBlOmrHVQ9YjXuXlAyNWlhptTUD6seQNFfCYU38hE9_9jvtdCq&merchant-id=XWVWZ4HG4YH9N&currency=USD&debug=true&components=buttons"
@@ -32,6 +53,5 @@
 
     <!-- qrcode - for dev mobile testing -->
     <script defer src="./utils/qrcode.js"></script>
-
   </body>
 </html>

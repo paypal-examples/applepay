@@ -1,7 +1,6 @@
 {
   "scripts": {
-    "start": "node server/index.js",
-    "dev": "concurrently \"nodemon server/index.js\" \"node scripts/proxy-https.js\"",
+    "start":"concurrently \"nodemon server/index.js\" \"node scripts/proxy-https.js\"",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "licenses": [
