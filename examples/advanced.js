@@ -4,7 +4,7 @@ const order = {
   purchase_units: [
     {
       payee: {
-        merchant_id: "XWVWZ4HG4YH9N",
+        merchant_id: "SJ4YQBQUVKVZU",
       },
       amount: {
         currency_code: "USD",
