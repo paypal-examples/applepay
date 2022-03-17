@@ -65,8 +65,8 @@ const order = {
 };
 
 /*
-* Calculate shipping
-*/
+ * Calculate shipping
+ */
 async function calculateShipping(shipping_address, selected_shipping_option) {
   const res = await fetch("/calculate-shipping", {
     method: "post",
@@ -111,117 +111,83 @@ paypal
         })
         .catch(console.error);
     },
-    onShippingChange(data, actions) {
+    async onShippingChange(data, actions) {
       const { shipping_address, selected_shipping_option, orderID } = data;
       const { amount, shipping } = order.purchase_units[0];
 
-      calculateShipping(shipping_address, selected_shipping_option)
-        .then((update) => {
-          const { taxRate, isShippingTaxable, updatedShippingOptions } =
-            update;
+      const { taxRate, isShippingTaxable, updatedShippingOptions } =
+        await calculateShipping(shipping_address, selected_shipping_option);
 
-          const itemTotal = parseFloat(amount.breakdown.item_total.value, 10);
+      const itemTotal = parseFloat(amount.breakdown.item_total.value);
 
-          const shippingMethodAmount = parseFloat(
-            data.selected_shipping_option.amount.value,
-            10
-          );
+      const shippingMethodAmount = parseFloat(
+        data.selected_shipping_option.amount.value,
+        10
+      );
 
-          let taxTotal = parseFloat(taxRate, 10) * itemTotal;
+      let taxTotal = parseFloat(taxRate) * itemTotal;
 
-          if (isShippingTaxable) {
-            taxTotal =
-              parseFloat(taxRate, 10) * (itemTotal + shippingMethodAmount);
-          }
+      if (isShippingTaxable) {
+        taxTotal = parseFloat(taxRate) * (itemTotal + shippingMethodAmount);
+      }
 
-          let shippingOptions = shipping.options.map((option) => ({
-            ...option,
-            selected: option.label === data.selected_shipping_option.label,
-          }));
+      let shippingOptions = shipping.options.map((option) => ({
+        ...option,
+        selected: option.label === data.selected_shipping_option.label,
+      }));
 
-          if (updatedShippingOptions) {
-            shippingOptions = updatedShippingOptions;
-          }
+      if (updatedShippingOptions) {
+        shippingOptions = updatedShippingOptions;
+      }
 
-          const shippingAddress = {
-            admin_area_2: data.shipping_address.city,
-            admin_area_1: data.shipping_address.state.toUpperCase(),
-            postal_code: data.shipping_address.postal_code,
-            country_code: data.shipping_address.country_code,
-          };
-
-          const amountValue = {
+      const amountValue = {
+        currency_code: amount.currency_code,
+        value: (itemTotal + taxTotal + shippingMethodAmount).toFixed(2),
+        breakdown: {
+          item_total: {
             currency_code: amount.currency_code,
-            value: (itemTotal + taxTotal + shippingMethodAmount).toFixed(2),
-            breakdown: {
-              item_total: {
-                currency_code: amount.currency_code,
-                value: itemTotal.toFixed(2),
-              },
-              tax_total: {
-                currency_code: amount.currency_code,
-                value: taxTotal.toFixed(2),
-              },
-              shipping: {
-                currency_code: amount.currency_code,
-                value: shippingMethodAmount.toFixed(2),
-              },
-            },
-          };
+            value: itemTotal.toFixed(2),
+          },
+          tax_total: {
+            currency_code: amount.currency_code,
+            value: taxTotal.toFixed(2),
+          },
+          shipping: {
+            currency_code: amount.currency_code,
+            value: shippingMethodAmount.toFixed(2),
+          },
+        },
+      };
 
-          return fetch(`/orders/${orderID}`, {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify([
-              // https://developer.paypal.com/api/orders/v2/#orders_patch
+      await fetch(`/orders/${orderID}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify([
+          // https://developer.paypal.com/api/orders/v2/#orders_patch
 
-              /*
-               * Shipping Address
-               */
-              {
-                op: "replace",
-                path: "/purchase_units/@reference_id=='default'/shipping/address",
-                value: shippingAddress,
-              },
+          /*
+           * Shipping Options
+           */
+          {
+            op: "replace",
+            path: "/purchase_units/@reference_id=='default'/shipping/options",
+            value: shippingOptions,
+          },
 
-              /*
-               * Shipping Options
-               */
-              {
-                op: "replace",
-                path: "/purchase_units/@reference_id=='default'/shipping/options",
-                value: shippingOptions,
-              },
+          /*
+           * Order Amount
+           */
+          {
+            op: "replace",
+            path: "/purchase_units/@reference_id=='default'/amount",
+            value: amountValue,
+          },
+        ]),
+      });
 
-              /*
-               * Order Amount
-               */
-              {
-                op: "replace",
-                path: "/purchase_units/@reference_id=='default'/amount",
-                value: amountValue,
-              },
-            ]),
-          })
-            .then((res) => {
-              if (!res.ok) {
-                throw new Error("patching order");
-              }
-              return res.json();
-            })
-            .then((json) => {
-              console.log(
-                `Successful Order patch call: ${JSON.stringify(json)}`
-              );
-              return actions.resolve();
-            })
-            .catch((err) => {
-              return actions.reject(err);
-            });
-        })
-        .catch(console.error);
+      return actions.resolve();
     },
   })
   .render("#applepay-btn");
