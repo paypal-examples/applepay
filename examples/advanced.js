@@ -25,16 +25,16 @@ const order = {
         },
       },
       shipping: {
+        name: {
+          full_name: "John Doe"
+        },
         address: {
-          shipping_name: "John Doe",
-          phone: "5109323432",
           address_line_1: "123 Townsend St",
           address_line_2: "Floor 6",
           admin_area_1: "CA",
           admin_area_2: "San Francisco",
           postal_code: "94107",
-          country_code: "US",
-          address_details: {},
+          country_code: "US"
         },
         method: "USPS",
         options: [
