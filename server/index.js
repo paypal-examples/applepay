@@ -44,7 +44,14 @@ app.post("/capture/:orderId", async (req, res) => {
   });
 
   console.log(`💰 Payment captured!`);
-  res.json(data);
+
+  const captureId = data.purchase_units[0].payments.captures[0].id
+  const captureStatus = data.purchase_units[0].payments.captures[0].status
+  const captureDebugID = headers['paypal-debug-id']
+  res.json({
+    captureDebuggId: captureDebugID,
+    capture: data
+  });
 });
 
 app.patch("/orders/:orderId", async (req, res) => {
@@ -120,12 +127,12 @@ app.post("/calculate-shipping", (req, res) => {
     updatedShippingOptions = updatedShippingOptions.map(option => ({
       ...option,
       selected: option.label === selected_shipping_option.label
-    })) 
+    }))
   }
 
   // is shipping taxable for postal_code
   const isShippingTaxable = false;
-  
+
   res.json({
     taxRate,
     updatedShippingOptions,
