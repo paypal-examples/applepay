@@ -33,20 +33,18 @@ app.post("/capture/:orderId", async (req, res) => {
 
   const { access_token } = await getAccessToken();
 
-  const { data } = await axios({
-    url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}/capture`,
-    method: "post",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      Authorization: `Bearer ${access_token}`,
-    },
-  });
+  const { data, headers } = await axios({
+      url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}/capture`,
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
 
   console.log(`💰 Payment captured!`);
 
-  const captureId = data.purchase_units[0].payments.captures[0].id
-  const captureStatus = data.purchase_units[0].payments.captures[0].status
   const captureDebugID = headers['paypal-debug-id']
   res.json({
     captureDebuggId: captureDebugID,
