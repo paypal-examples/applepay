@@ -35,6 +35,7 @@ const order = {
           postal_code: "94107",
           country_code: "US"
         },*/
+        method: "USPS",
         options: [
           {
             id: "SHIP_123",
@@ -152,6 +153,11 @@ paypal
             },
           };
 
+          console.log(JSON.stringify({
+            amountValue, taxTotal, shippingMethodAmount,
+            totalValue: (itemTotal + taxTotal + shippingMethodAmount).toFixed(2)
+          }))
+
           return fetch(`/orders/${orderID}`, {
             method: "PATCH",
             headers: {
@@ -178,7 +184,6 @@ paypal
               return actions.resolve();
             })
             .catch((err) => {
-
               return actions.reject(err);
             });
         })
