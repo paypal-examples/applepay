@@ -122,7 +122,7 @@ paypal
     },
     onShippingChange(data, actions) {
       const { shipping_address, selected_shipping_option, orderID } = data;
-      const { amount } = order.purchase_units[0];
+      const { amount, shipping } = order.purchase_units[0];
 
       return calculateShipping({ shipping_address, selected_shipping_option })
         .then(({ taxRate }) => {
@@ -131,6 +131,11 @@ paypal
           const shippingMethodAmount = parseFloat(
             data.selected_shipping_option.amount.value
           );
+
+          const shippingOptions = (shipping?.options || []).map((option) => ({
+            ...option,
+            selected: option.label === data.selected_shipping_option.label,
+          }));
 
           const taxTotal = parseFloat(taxRate) * itemTotal;
 
@@ -153,11 +158,6 @@ paypal
             },
           };
 
-          console.log(JSON.stringify({
-            amountValue, taxTotal, shippingMethodAmount,
-            totalValue: (itemTotal + taxTotal + shippingMethodAmount).toFixed(2)
-          }))
-
           return fetch(`/orders/${orderID}`, {
             method: "PATCH",
             headers: {
@@ -165,6 +165,19 @@ paypal
             },
             body: JSON.stringify([
               // info: https://developer.paypal.com/api/orders/v2/#orders_patch
+
+              /*
+               * Shipping Options
+               */
+              {
+                op: "replace",
+                path: "/purchase_units/@reference_id=='default'/shipping/options",
+                value: shippingOptions,
+              },
+
+              /*
+               * Order Amount
+               */
               {
                 op: "replace",
                 path: "/purchase_units/@reference_id=='default'/amount",
@@ -175,7 +188,7 @@ paypal
             .then((res) => {
               const data = res.json();
               if (!res.ok) {
-                console.log(data)
+                console.log(data);
                 throw new Error("patching order");
               }
               return data;
