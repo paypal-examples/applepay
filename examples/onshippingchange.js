@@ -115,7 +115,7 @@ paypal
         method: "post",
       })
         .then((res) => res.json())
-        .then((data) => {
+        .then(() => {
           alert(`Order Captured - id ${data.orderID}`);
         })
         .catch(console.error);
