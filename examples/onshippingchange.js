@@ -22,20 +22,6 @@ const order = {
         },
       },
       shipping: {
-        /* address can be supplied upfront if available */
-        /*
-        name: {
-          full_name: "John Doe"
-        },
-        address: {
-          address_line_1: "123 Townsend St",
-          address_line_2: "Floor 6",
-          admin_area_1: "CA",
-          admin_area_2: "San Francisco",
-          postal_code: "94107",
-          country_code: "US"
-        },*/
-        method: "USPS",
         options: [
           {
             id: "SHIP_123",
@@ -116,9 +102,12 @@ paypal
       })
         .then((res) => res.json())
         .then(() => {
-          alert(`Order Captured - id ${data.orderID}`);
+          alert(`Order Capture Success - OrderID ${data.orderID}`);
         })
-        .catch(console.error);
+        .catch((err) => {
+          alert(`Order Capture Error - OrderID ${data.orderID}`);
+          console.error(err)
+        });
     },
     onShippingChange(data, actions) {
       const { shipping_address, selected_shipping_option, orderID } = data;
@@ -186,14 +175,9 @@ paypal
             ]),
           })
             .then((res) => {
-              const data = res.json();
               if (!res.ok) {
-                console.log(data);
                 throw new Error("patching order");
               }
-              return data;
-            })
-            .then((json) => {
               return actions.resolve();
             })
             .catch((err) => {
