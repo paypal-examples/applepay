@@ -62,18 +62,14 @@ const order = {
 /*
  * Calculate shipping
  */
-async function calculateShipping({
-  shipping_address,
-  selected_shipping_option,
-}) {
+async function calculateShipping(shippingAddress) {
   const res = await fetch("/calculate-shipping", {
     method: "post",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      shipping_address,
-      selected_shipping_option,
+      shippingAddress,
     }),
   });
 
@@ -81,7 +77,6 @@ async function calculateShipping({
 
   // based on zipcode change
   return {
-    // updatedShippingOptions.. etc ..
     taxRate,
   };
 }
@@ -110,10 +105,9 @@ paypal
         });
     },
     onShippingChange(data, actions) {
-      const { shipping_address, selected_shipping_option, orderID } = data;
       const { amount, shipping } = order.purchase_units[0];
 
-      return calculateShipping({ shipping_address, selected_shipping_option })
+      return calculateShipping(data.shipping_address)
         .then(({ taxRate }) => {
           const itemTotal = parseFloat(amount.breakdown.item_total.value);
 
@@ -121,14 +115,9 @@ paypal
             data.selected_shipping_option.amount.value
           );
 
-          const shippingOptions = (shipping?.options || []).map((option) => ({
-            ...option,
-            selected: option.label === data.selected_shipping_option.label,
-          }));
-
           const taxTotal = parseFloat(taxRate) * itemTotal;
 
-          const amountValue = {
+          const purchaseUnitsAmount = {
             currency_code: amount.currency_code,
             value: (itemTotal + taxTotal + shippingMethodAmount).toFixed(2),
             breakdown: {
@@ -147,7 +136,12 @@ paypal
             },
           };
 
-          return fetch(`/orders/${orderID}`, {
+          const shippingOptions = (shipping?.options || []).map((option) => ({
+            ...option,
+            selected: option.label === data.selected_shipping_option.label,
+          }));
+
+          return fetch(`/orders/${data.orderID}`, {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
@@ -170,7 +164,7 @@ paypal
               {
                 op: "replace",
                 path: "/purchase_units/@reference_id=='default'/amount",
-                value: amountValue,
+                value: purchaseUnitsAmount,
               },
             ]),
           })
