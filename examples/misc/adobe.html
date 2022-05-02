@@ -17,19 +17,19 @@
     />
   </head>
   <body>
-  <div class="container">
-    <h3>Sandbox</h3>
-    <h6></h6>
-    <br />
+    <div class="container">
+      <h3>Sandbox</h3>
+      <h6></h6>
+      <br />
 
-    <h3>Quick pay button w/shipping</h3>
-    <div id="applepay-shipping-btn"></div>
+      <h3>Quick pay button w/shipping</h3>
+      <div id="applepay-shipping-btn"></div>
 
-    <br/><br/><br/><br/>
+      <br /><br /><br /><br />
 
-    <h3>Checkout btn w/ no shipping</h3>
-    <div id="applepay-no-shipping-btn"></div>
-  </div>
+      <h3>Checkout btn w/ no shipping</h3>
+      <div id="applepay-no-shipping-btn"></div>
+    </div>
 
     <script
       src="https://www.paypal.com/sdk/js?client-id=AdVrVyh_UduEct9CWFHsaHRXKVxbnCDleEJdVOZdb52qSjrWkKDNd6E1CNvd5BvNrGSsXzgQ238dGgZ4&components=buttons&merchant-id=2V9L63AM2BYKC&debug=true&disable-funding=card"
@@ -44,7 +44,51 @@
           {
             amount: {
               currency_code: "USD",
-              value: "7.05",
+              value: "100.00",
+              breakdown: {
+                item_total: {
+                  currency_code: "USD",
+                  value: "100.00",
+                },
+                shipping: {
+                  currency_code: "USD",
+                  value: "0.00",
+                },
+              },
+            },
+            shipping: {
+              options: [
+                {
+                  id: "1",
+                  label: "Free Shipping",
+                  type: "SHIPPING",
+                  selected: true,
+                  amount: {
+                    value: "00.00",
+                    currency_code: "USD",
+                  },
+                },
+                {
+                  id: "2",
+                  label: "Fixed",
+                  type: "SHIPPING",
+                  selected: false,
+                  amount: {
+                    value: "5.00",
+                    currency_code: "USD",
+                  },
+                },
+                {
+                  id: "3",
+                  label: "Table Rate",
+                  type: "SHIPPING",
+                  selected: false,
+                  amount: {
+                    value: "15.00",
+                    currency_code: "USD",
+                  },
+                },
+              ],
             },
           },
         ],
@@ -55,7 +99,7 @@
           style: {
             label: "",
             color: "silver",
-            shape: "pill"
+            shape: "pill",
           },
           createOrder(data, actions) {
             return actions.order.create(order);
@@ -71,6 +115,72 @@
                 alert("order captured");
               })
               .catch(console.error);
+          },
+          onShippingChange(data, actions) {
+            const { amount, shipping } = order.purchase_units[0];
+
+            const itemTotal = parseFloat(amount.breakdown.item_total.value);
+
+            const shippingMethodAmount = parseFloat(
+              data.selected_shipping_option.amount.value
+            );
+
+            const purchaseUnitsAmount = {
+              currency_code: amount.currency_code,
+              value: (itemTotal + shippingMethodAmount).toFixed(2),
+              breakdown: {
+                item_total: {
+                  currency_code: amount.currency_code,
+                  value: itemTotal.toFixed(2),
+                },
+                shipping: {
+                  currency_code: amount.currency_code,
+                  value: shippingMethodAmount.toFixed(2),
+                },
+              },
+            };
+
+            const shippingOptions = (shipping?.options || []).map((option) => ({
+              ...option,
+              selected: option.label === data.selected_shipping_option.label,
+            }));
+
+            return fetch(`/orders/${data.orderID}`, {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify([
+                // info: https://developer.paypal.com/api/orders/v2/#orders_patch
+
+                /*
+                 * Shipping Options
+                 */
+                {
+                  op: "replace",
+                  path: "/purchase_units/@reference_id=='default'/shipping/options",
+                  value: shippingOptions,
+                },
+
+                /*
+                 * Order Amount
+                 */
+                {
+                  op: "replace",
+                  path: "/purchase_units/@reference_id=='default'/amount",
+                  value: purchaseUnitsAmount,
+                },
+              ]),
+            })
+              .then((res) => {
+                if (!res.ok) {
+                  throw new Error("patching order");
+                }
+                return actions.resolve();
+              })
+              .catch((err) => {
+                return actions.reject(err);
+              });
           },
         })
         .render("#applepay-shipping-btn");
@@ -98,7 +208,7 @@
           style: {
             label: "",
             color: "silver",
-            shape: "pill"
+            shape: "pill",
           },
           createOrder(data, actions) {
             return actions.order.create(orderNoShipping);
