@@ -59,9 +59,6 @@ const order = {
   ],
 };
 
-/*
- * Calculate shipping
- */
 async function calculateShipping(shippingAddress) {
   const res = await fetch("/calculate-shipping", {
     method: "post",

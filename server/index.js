@@ -34,22 +34,18 @@ app.post("/capture/:orderId", async (req, res) => {
   const { access_token } = await getAccessToken();
 
   const { data, headers } = await axios({
-      url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}/capture`,
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
-
-  console.log(`💰 Payment captured!`);
-
-  const captureDebugID = headers['paypal-debug-id']
-  res.json({
-    captureDebuggId: captureDebugID,
-    capture: data
+    url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}/capture`,
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${access_token}`,
+    },
   });
+
+  const debugID = headers["paypal-debug-id"];
+
+  res.json({ debugID, ...data });
 });
 
 app.patch("/orders/:orderId", async (req, res) => {
@@ -58,7 +54,7 @@ app.patch("/orders/:orderId", async (req, res) => {
   try {
     const { access_token } = await getAccessToken();
 
-    const { data } = await axios({
+    const { data, headers } = await axios({
       url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}`,
       method: "PATCH",
       headers: {
@@ -69,19 +65,17 @@ app.patch("/orders/:orderId", async (req, res) => {
       data: req.body,
     });
 
-    res.json(data);
+    const debugID = headers["paypal-debug-id"];
+
+    res.json({ debugID, ...data });
   } catch (err) {
     res.status(422).json(err.response.data);
   }
 });
 
 app.post("/calculate-shipping", (req, res) => {
-  // const { shipping_address, selected_shipping_option } = req.body;
-
-  const taxRate = 0.1; // tax rate 10%
-
   res.json({
-    taxRate,
+    taxRate: 0.0725, // 7.25%
   });
 });
 

@@ -1,4 +1,4 @@
-// require HTTPS for appelpay
+// HTTPS required
 function requireHTTPS(req, res, next){
   // The 'x-forwarded-proto' check is for Heroku
   if (req.get('x-forwarded-proto') !== 'https') {
