@@ -107,6 +107,7 @@
           onApprove(data, actions) {
             console.log("Order approved");
 
+            /* NOTE: Adobe may call Authorize in this case not capture */
             fetch(`/capture/${data.orderID}`, {
               method: "post",
             })
@@ -214,8 +215,8 @@
             return actions.order.create(orderNoShipping);
           },
           onApprove(data, actions) {
-            console.log("Order approved");
-
+          
+            /* NOTE: Adobe may call Authorize in this case not capture */
             fetch(`/capture/${data.orderID}`, {
               method: "post",
             })
