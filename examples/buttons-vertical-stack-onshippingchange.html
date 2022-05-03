@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    
+
     <!-- brand icon for payment sheet -->
-    <link rel="apple-touch-icon" href="/assets/logo.png">
+    <link rel="apple-touch-icon" href="/assets/logo.png" />
 
     <!-- 
     screen options
@@ -16,40 +16,38 @@
     <link rel="apple-touch-icon" sizes="180x180" href="touch-icon-iphone-retina.png">
     <link rel="apple-touch-icon" sizes="167x167" href="touch-icon-ipad-retina.png">
     -->
-    
-    <title>onShippingChange Example</title>
+
+    <link rel="apple-touch-icon" href="/assets/coffee-icon.png" />
+    <title>Vertical Buttons</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
       crossorigin="anonymous"
     />
-
   </head>
   <body>
     <div class="container">
       <h3>Sandbox</h3>
 
-      <br/>
+      <br />
 
-      <h6>onShippingChange Example</h6>
-      <p>Handle shipping recalculation events</p>
+      <h6>Vertical Buttons</h6>
+      <p>With shipping change</p>
 
-      <br/><br/><br/>
+      <br /><br /><br />
       <div id="applepay-btn"></div>
-      <br/><br/><br/>
+      <br /><br /><br />
     </div>
-  
 
     <script
       src="https://www.paypal.com/sdk/js?client-id=AdVrVyh_UduEct9CWFHsaHRXKVxbnCDleEJdVOZdb52qSjrWkKDNd6E1CNvd5BvNrGSsXzgQ238dGgZ4&components=buttons&merchant-id=2V9L63AM2BYKC&debug=true"
       data-partner-attribution-id="APPLEPAY"
     ></script>
-    
-    <script src="./onshippingchange.js"></script>
 
-    <!-- @dev -->
+    <script src="./buttons-vertical-stack.js"></script>
+
+    <!-- qrcode - for dev mobile testing -->
     <script defer src="./utils/qrcode.js"></script>
-
   </body>
 </html>

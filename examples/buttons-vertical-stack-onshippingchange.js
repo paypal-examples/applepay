@@ -89,8 +89,9 @@ async function calculateShipping({
 paypal
   .Buttons({
     style: {
-      label: "pay",
-      // color: "black",
+      label: "",
+      color: "silver",
+      shape: "pill",
     },
     createOrder(data, actions) {
       return actions.order.create(order);
