@@ -138,6 +138,7 @@ paypal
             selected: option.label === data.selected_shipping_option.label,
           }));
 
+          // must return promise
           return fetch(`/orders/${data.orderID}`, {
             method: "PATCH",
             headers: {
