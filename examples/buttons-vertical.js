@@ -6,20 +6,6 @@ const order = {
       amount: {
         currency_code: "USD",
         value: "120.00",
-        breakdown: {
-          item_total: {
-            currency_code: "USD",
-            value: "100.00",
-          },
-          tax_total: {
-            currency_code: "USD",
-            value: "10.00",
-          },
-          shipping: {
-            currency_code: "USD",
-            value: "10.00",
-          },
-        },
       }
     },
   ],
