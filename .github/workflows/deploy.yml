@@ -20,7 +20,9 @@ jobs:
             NODE_ENV
             CLIENT_ID
             CLIENT_SECRET
+            DISABLE_CAPTURE
         env:
           NODE_ENV: staging
           CLIENT_ID: ${{secrets.CLIENT_ID}}
           CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
+          DISABLE_CAPTURE: true
