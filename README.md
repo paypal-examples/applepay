@@ -17,3 +17,4 @@ and configuring your .env config file with your Paypal ClientId and ClientSecret
 2. Run `npm install`
 3. Run `npm run dev`
 
+
