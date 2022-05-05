@@ -6,7 +6,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const { getAccessToken } = require("./paypal");
-const { PORT, PAYPAL_API_BASE } = require("./config");
+const { PORT, PAYPAL_API_BASE, DISABLE_CAPTURE } = require("./config");
 const { requireHTTPS } = require("./middleware");
 
 const app = express();
@@ -27,26 +27,6 @@ app.get(
     );
   }
 );
-
-app.post("/capture/:orderId", async (req, res) => {
-  const { orderId } = req.params;
-
-  const { access_token } = await getAccessToken();
-
-  const { data, headers } = await axios({
-    url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}/capture`,
-    method: "post",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      Authorization: `Bearer ${access_token}`,
-    },
-  });
-
-  const debugID = headers["paypal-debug-id"];
-
-  res.json({ debugID, ...data });
-});
 
 app.patch("/orders/:orderId", async (req, res) => {
   const { orderId } = req.params;
@@ -74,9 +54,35 @@ app.patch("/orders/:orderId", async (req, res) => {
 });
 
 app.post("/calculate-shipping", (req, res) => {
+  // mock sales tax rate
   res.json({
     taxRate: 0.0725, // 7.25%
   });
+});
+
+app.post("/capture/:orderId", async (req, res) => {
+  // disable capture for demo app
+  if (DISABLE_CAPTURE) {
+    return res.json({});
+  }
+
+  const { orderId } = req.params;
+
+  const { access_token } = await getAccessToken();
+
+  const { data, headers } = await axios({
+    url: `${PAYPAL_API_BASE}/v2/checkout/orders/${orderId}/capture`,
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${access_token}`,
+    },
+  });
+
+  const debugID = headers["paypal-debug-id"];
+
+  res.json({ debugID, ...data });
 });
 
 app.listen(PORT, async () => {

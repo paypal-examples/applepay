@@ -98,7 +98,7 @@ paypal
         })
         .catch((err) => {
           alert(`Order Capture Error - OrderID ${data.orderID}`);
-          console.error(err)
+          console.error(err);
         });
     },
     onShippingChange(data, actions) {
@@ -173,6 +173,7 @@ paypal
               return actions.resolve();
             })
             .catch((err) => {
+              console.error(err);
               return actions.reject(err);
             });
         })
