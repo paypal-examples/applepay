@@ -3,6 +3,8 @@
 See a [hosted version](https://applepay-paypal-js-sdk.herokuapp.com) of the sample
 
 
+Currently in beta
+
 ### How to run locally
 
 Copy the .env.example file into a file named .env
