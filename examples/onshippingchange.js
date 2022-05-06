@@ -106,6 +106,7 @@ paypal
 
       return calculateShipping(data.shipping_address)
         .then(({ taxRate, updatedShippingOptions }) => {
+          console.log(JSON.stringify(data, null, 4))
           const itemTotal = parseFloat(amount.breakdown.item_total.value);
 
           let shippingMethodAmount = parseFloat(
@@ -145,6 +146,12 @@ paypal
               },
             },
           };
+
+          console.log(JSON.stringify({
+            shippingOptions, 
+            shippingMethodAmount,
+            purchaseUnitsAmount
+          }, null, 4))
 
           return fetch(`/orders/${data.orderID}`, {
             method: "PATCH",
