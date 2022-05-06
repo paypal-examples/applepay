@@ -70,11 +70,12 @@ async function calculateShipping(shippingAddress) {
     }),
   });
 
-  const { taxRate } = await res.json();
+  const { taxRate, updatedShippingOptions } = await res.json();
 
   // based on zipcode change
   return {
     taxRate,
+    updatedShippingOptions,
   };
 }
 
@@ -104,7 +105,7 @@ paypal
       const { amount, shipping } = order.purchase_units[0];
 
       return calculateShipping(data.shipping_address)
-        .then(({ taxRate }) => {
+        .then(({ taxRate, updatedShippingOptions }) => {
           const itemTotal = parseFloat(amount.breakdown.item_total.value);
 
           const shippingMethodAmount = parseFloat(
@@ -132,10 +133,14 @@ paypal
             },
           };
 
-          const shippingOptions = (shipping?.options || []).map((option) => ({
+          let shippingOptions = (shipping?.options || []).map((option) => ({
             ...option,
             selected: option.label === data.selected_shipping_option.label,
           }));
+
+          if (updatedShippingOptions) {
+            shippingOptions = updatedShippingOptions;
+          }
 
           return fetch(`/orders/${data.orderID}`, {
             method: "PATCH",

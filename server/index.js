@@ -57,6 +57,38 @@ app.post("/calculate-shipping", (req, res) => {
   // mock sales tax rate
   res.json({
     taxRate: 0.0725, // 7.25%
+    updatedShippingOptions: [
+      {
+        id: "SHIP_123",
+        label: "1-3 Day Shipping",
+        type: "SHIPPING",
+        selected: true,
+        amount: {
+          value: "11.00",
+          currency_code: "USD",
+        },
+      },
+      {
+        id: "SHIP_456",
+        label: "3-6 Day Shipping",
+        type: "SHIPPING",
+        selected: false,
+        amount: {
+          value: "6.00",
+          currency_code: "USD",
+        },
+      },
+      {
+        id: "SHIP_789",
+        label: "In Store Pickup",
+        type: "PICKUP",
+        selected: false,
+        amount: {
+          value: "0.00",
+          currency_code: "USD",
+        },
+      },
+    ]
   });
 });
 
