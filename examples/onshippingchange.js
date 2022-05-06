@@ -108,7 +108,7 @@ paypal
         .then(({ taxRate, updatedShippingOptions }) => {
           const itemTotal = parseFloat(amount.breakdown.item_total.value);
 
-          const shippingMethodAmount = parseFloat(
+          let shippingMethodAmount = parseFloat(
             data.selected_shipping_option.amount.value
           );
 
@@ -140,6 +140,7 @@ paypal
 
           if (updatedShippingOptions) {
             shippingOptions = updatedShippingOptions;
+            shippingMethodAmount = parseFloat(updatedShippingOptions.find(option => option.selected)?.amount.value || '0.00')
           }
 
           return fetch(`/orders/${data.orderID}`, {
