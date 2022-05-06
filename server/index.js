@@ -64,7 +64,7 @@ app.post("/calculate-shipping", (req, res) => {
         type: "SHIPPING",
         selected: true,
         amount: {
-          value: "11.00",
+          value: "10.00",
           currency_code: "USD",
         },
       },
@@ -74,7 +74,7 @@ app.post("/calculate-shipping", (req, res) => {
         type: "SHIPPING",
         selected: false,
         amount: {
-          value: "6.00",
+          value: "5.00",
           currency_code: "USD",
         },
       },
@@ -88,7 +88,7 @@ app.post("/calculate-shipping", (req, res) => {
           currency_code: "USD",
         },
       },
-    ]
+    ],
   });
 });
 
@@ -96,7 +96,7 @@ app.post("/capture/:orderId", async (req, res) => {
   // disable capture for demo app
   if (DISABLE_CAPTURE) {
     return res.json({
-      message: "capture disabled for demo"
+      message: "capture disabled for demo",
     });
   }
 
