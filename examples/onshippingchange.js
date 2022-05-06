@@ -122,11 +122,11 @@ paypal
 
           /* 
           * If shipping options are updated on address change
-          */
           if (updatedShippingOptions) {
             shippingOptions = updatedShippingOptions;
             shippingMethodAmount = parseFloat(updatedShippingOptions.find(option => option.selected)?.amount.value || '0.00')
           }
+           */
 
           const purchaseUnitsAmount = {
             currency_code: amount.currency_code,
