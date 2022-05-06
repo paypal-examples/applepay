@@ -27,10 +27,9 @@ paypal
       })
         .then((res) => res.json())
         .then(() => {
-          alert(`Order Capture Success - OrderID ${data.orderID}`);
+          console.log(`Order capture success - Order ID ${data.orderID}`);
         })
         .catch((err) => {
-          alert(`Order Capture Error - OrderID ${data.orderID}`);
           console.error(err)
         });
     }
