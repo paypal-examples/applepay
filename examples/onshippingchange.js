@@ -114,6 +114,19 @@ paypal
 
           const taxTotal = parseFloat(taxRate) * itemTotal;
 
+          let shippingOptions = (shipping?.options || []).map((option) => ({
+            ...option,
+            selected: option.label === data.selected_shipping_option.label,
+          }));
+
+          /* 
+          * If shipping options are updated on address change
+          */
+          if (updatedShippingOptions) {
+            shippingOptions = updatedShippingOptions;
+            shippingMethodAmount = parseFloat(updatedShippingOptions.find(option => option.selected)?.amount.value || '0.00')
+          }
+
           const purchaseUnitsAmount = {
             currency_code: amount.currency_code,
             value: (itemTotal + taxTotal + shippingMethodAmount).toFixed(2),
@@ -132,16 +145,6 @@ paypal
               },
             },
           };
-
-          let shippingOptions = (shipping?.options || []).map((option) => ({
-            ...option,
-            selected: option.label === data.selected_shipping_option.label,
-          }));
-
-          if (updatedShippingOptions) {
-            shippingOptions = updatedShippingOptions;
-            shippingMethodAmount = parseFloat(updatedShippingOptions.find(option => option.selected)?.amount.value || '0.00')
-          }
 
           return fetch(`/orders/${data.orderID}`, {
             method: "PATCH",
