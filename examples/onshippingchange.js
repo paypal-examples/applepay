@@ -5,19 +5,19 @@ const order = {
     {
       amount: {
         currency_code: "USD",
-        value: "0.04",
+        value: "120.00",
         breakdown: {
           item_total: {
             currency_code: "USD",
-            value: "0.01",
+            value: "100.00",
           },
           tax_total: {
             currency_code: "USD",
-            value: "0.01",
+            value: "10.00",
           },
           shipping: {
             currency_code: "USD",
-            value: "0.02",
+            value: "10.00",
           },
         },
       },
@@ -29,7 +29,7 @@ const order = {
             type: "SHIPPING",
             selected: true,
             amount: {
-              value: "0.02",
+              value: "10.00",
               currency_code: "USD",
             },
           },
@@ -39,7 +39,7 @@ const order = {
             type: "SHIPPING",
             selected: false,
             amount: {
-              value: "0.01",
+              value: "5.00",
               currency_code: "USD",
             },
           },
