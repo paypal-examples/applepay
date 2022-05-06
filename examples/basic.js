@@ -5,7 +5,7 @@ const order = {
     {
       amount: {
         currency_code: "USD",
-        value: "7.05",
+        value: "0.01",
       },
     },
   ],
