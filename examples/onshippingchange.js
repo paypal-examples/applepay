@@ -5,7 +5,7 @@ const order = {
     {
       amount: {
         currency_code: "USD",
-        value: "0.03",
+        value: "0.04",
         breakdown: {
           item_total: {
             currency_code: "USD",
@@ -17,7 +17,7 @@ const order = {
           },
           shipping: {
             currency_code: "USD",
-            value: "0.01",
+            value: "0.02",
           },
         },
       },
@@ -27,7 +27,7 @@ const order = {
             id: "SHIP_123",
             label: "1-3 Day",
             type: "SHIPPING",
-            selected: false,
+            selected: true,
             amount: {
               value: "0.02",
               currency_code: "USD",
@@ -37,7 +37,7 @@ const order = {
             id: "SHIP_456",
             label: "3-6 Day",
             type: "SHIPPING",
-            selected: true,
+            selected: false,
             amount: {
               value: "0.01",
               currency_code: "USD",
