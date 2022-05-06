@@ -29,7 +29,7 @@ paypal
       })
         .then((res) => res.json())
         .then((data) => {
-          alert("order captured")
+          console.log("order captured")
         })
         .catch(console.error);
     },
