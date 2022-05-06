@@ -5,19 +5,19 @@ const order = {
     {
       amount: {
         currency_code: "USD",
-        value: "120.00",
+        value: "0.03",
         breakdown: {
           item_total: {
             currency_code: "USD",
-            value: "100.00",
+            value: "0.01",
           },
           tax_total: {
             currency_code: "USD",
-            value: "10.00",
+            value: "0.01",
           },
           shipping: {
             currency_code: "USD",
-            value: "10.00",
+            value: "0.01",
           },
         },
       },
@@ -27,9 +27,9 @@ const order = {
             id: "SHIP_123",
             label: "1-3 Day",
             type: "SHIPPING",
-            selected: true,
+            selected: false,
             amount: {
-              value: "10.00",
+              value: "0.02",
               currency_code: "USD",
             },
           },
@@ -37,9 +37,9 @@ const order = {
             id: "SHIP_456",
             label: "3-6 Day",
             type: "SHIPPING",
-            selected: false,
+            selected: true,
             amount: {
-              value: "20.00",
+              value: "0.01",
               currency_code: "USD",
             },
           },
@@ -138,15 +138,13 @@ paypal
             selected: option.label === data.selected_shipping_option.label,
           }));
 
-          // must return promise
           return fetch(`/orders/${data.orderID}`, {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
             },
+            // https://developer.paypal.com/api/orders/v2/#orders_patch
             body: JSON.stringify([
-              // info: https://developer.paypal.com/api/orders/v2/#orders_patch
-
               /*
                * Shipping Options
                */
@@ -157,7 +155,7 @@ paypal
               },
 
               /*
-               * Order Amount
+               * Amount
                */
               {
                 op: "replace",
@@ -177,7 +175,10 @@ paypal
               return actions.reject(err);
             });
         })
-        .catch(console.error);
+        .catch((err) => {
+          console.error(err);
+          return actions.reject(err);
+        });
     },
   })
   .render("#applepay-btn");
