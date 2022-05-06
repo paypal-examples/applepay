@@ -25,7 +25,7 @@ const order = {
         options: [
           {
             id: "SHIP_123",
-            label: "1-3 Day",
+            label: "1-3 Day Shipping",
             type: "SHIPPING",
             selected: true,
             amount: {
@@ -35,7 +35,7 @@ const order = {
           },
           {
             id: "SHIP_456",
-            label: "3-6 Day",
+            label: "3-6 Day Shipping",
             type: "SHIPPING",
             selected: false,
             amount: {
@@ -45,7 +45,7 @@ const order = {
           },
           {
             id: "SHIP_789",
-            label: "In Store",
+            label: "In Store Pickup",
             type: "PICKUP",
             selected: false,
             amount: {
