@@ -63,7 +63,9 @@ app.post("/calculate-shipping", (req, res) => {
 app.post("/capture/:orderId", async (req, res) => {
   // disable capture for demo app
   if (DISABLE_CAPTURE) {
-    return res.json({});
+    return res.json({
+      message: "capture disabled for demo"
+    });
   }
 
   const { orderId } = req.params;
