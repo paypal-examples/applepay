@@ -6,7 +6,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const { getAccessToken } = require("./paypal");
-const { PORT, PAYPAL_API_BASE, DISABLE_CAPTURE } = require("./config");
+const { PORT, PAYPAL_API_BASE } = require("./config");
 const { requireHTTPS } = require("./middleware");
 
 const app = express();
@@ -94,6 +94,8 @@ app.post("/calculate-shipping", (req, res) => {
 
 app.post("/capture/:orderId", async (req, res) => {
   // disable capture for demo app
+  const DISABLE_CAPTURE = true;
+  
   if (DISABLE_CAPTURE) {
     return res.json({
       message: "capture disabled for demo",
