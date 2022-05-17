@@ -101,87 +101,74 @@ paypal
           console.error(err);
         });
     },
-    onShippingChange(data, actions) {
+    async onShippingChange(data, actions) {
       const { amount, shipping } = order.purchase_units[0];
 
-      return calculateShipping(data.shipping_address)
-        .then(({ taxRate, updatedShippingOptions }) => {
-          const itemTotal = parseFloat(amount.breakdown.item_total.value);
+      const { taxRate, updatedShippingOptions } = await calculateShipping(data.shipping_address);
 
-          let shippingMethodAmount = parseFloat(
-            data.selected_shipping_option.amount.value
-          );
+      const itemTotal = parseFloat(amount.breakdown.item_total.value);
 
-          const taxTotal = parseFloat(taxRate) * itemTotal;
+      let shippingMethodAmount = parseFloat(
+        data.selected_shipping_option.amount.value
+      );
 
-          let shippingOptions = (shipping?.options || []).map((option) => ({
-            ...option,
-            selected: option.id === data.selected_shipping_option.id,
-          }));
+      const taxTotal = parseFloat(taxRate) * itemTotal;
 
-          // If shipping options are updated on address change
-          /*
-          if (data.callbackTrigger == 'SHIPPING_ADDRESS' && updatedShippingOptions) {
-            shippingOptions = updatedShippingOptions;
-            shippingMethodAmount = parseFloat(updatedShippingOptions.find(option => option.selected)?.amount.value || '0.00')
-          }
-          */
+      let shippingOptions = (shipping?.options || []).map((option) => ({
+        ...option,
+        selected: option.id === data.selected_shipping_option.id,
+      }));
 
-          const purchaseUnitsAmount = {
+      const purchaseUnitsAmount = {
+        currency_code: amount.currency_code,
+        value: (itemTotal + taxTotal + shippingMethodAmount).toFixed(2),
+        breakdown: {
+          item_total: {
             currency_code: amount.currency_code,
-            value: (itemTotal + taxTotal + shippingMethodAmount).toFixed(2),
-            breakdown: {
-              item_total: {
-                currency_code: amount.currency_code,
-                value: itemTotal.toFixed(2),
-              },
-              tax_total: {
-                currency_code: amount.currency_code,
-                value: taxTotal.toFixed(2),
-              },
-              shipping: {
-                currency_code: amount.currency_code,
-                value: shippingMethodAmount.toFixed(2),
-              },
-            },
-          };
+            value: itemTotal.toFixed(2),
+          },
+          tax_total: {
+            currency_code: amount.currency_code,
+            value: taxTotal.toFixed(2),
+          },
+          shipping: {
+            currency_code: amount.currency_code,
+            value: shippingMethodAmount.toFixed(2),
+          },
+        },
+      };
 
-          return fetch(`/orders/${data.orderID}`, {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            // https://developer.paypal.com/api/orders/v2/#orders_patch
-            body: JSON.stringify([
-              /*
-               * Shipping Options
-               */
-              {
-                op: "replace",
-                path: "/purchase_units/@reference_id=='default'/shipping/options",
-                value: shippingOptions,
-              },
+      await fetch(`/orders/${data.orderID}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // https://developer.paypal.com/api/orders/v2/#orders_patch
+        body: JSON.stringify([
+          /*
+           * Shipping Options
+           */
+          {
+            op: "replace",
+            path: "/purchase_units/@reference_id=='default'/shipping/options",
+            value: shippingOptions,
+          },
 
-              /*
-               * Amount
-               */
-              {
-                op: "replace",
-                path: "/purchase_units/@reference_id=='default'/amount",
-                value: purchaseUnitsAmount,
-              },
-            ]),
-          })
-            .then((res) => {
-              if (!res.ok) {
-                throw new Error("patching order");
-              }
-              return actions.resolve();
-            })
-            .catch((err) => {
-              console.error(err);
-              return actions.reject(err);
-            });
+          /*
+           * Amount
+           */
+          {
+            op: "replace",
+            path: "/purchase_units/@reference_id=='default'/amount",
+            value: purchaseUnitsAmount,
+          },
+        ]),
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("patching order");
+          }
+          return actions.resolve();
         })
         .catch((err) => {
           console.error(err);
