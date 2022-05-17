@@ -22,18 +22,14 @@ paypal
       return actions.order.create(order);
     },
     onApprove(data, actions) {
-      console.log("Order approved")
-      return actions.order.capture();
-/*
       fetch(`/capture/${data.orderID}`, {
         method: "post",
       })
         .then((res) => res.json())
-        .then((data) => {
-          console.log("order captured")
+        .then(() => {
+          alert(`order captured id: ${data.orderID}`)
         })
         .catch(console.error);
-        */
     },
   })
   .render("#applepay-btn");
