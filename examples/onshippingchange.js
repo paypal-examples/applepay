@@ -106,7 +106,6 @@ paypal
 
       return calculateShipping(data.shipping_address)
         .then(({ taxRate, updatedShippingOptions }) => {
-          console.log(JSON.stringify(data, null, 4))
           const itemTotal = parseFloat(amount.breakdown.item_total.value);
 
           let shippingMethodAmount = parseFloat(
@@ -120,13 +119,13 @@ paypal
             selected: option.label === data.selected_shipping_option.label,
           }));
 
-          /* 
-          * If shipping options are updated on address change
-          if (updatedShippingOptions) {
+          // If shipping options are updated on address change
+          /*
+          if (data.callbackTrigger == 'SHIPPING_ADDRESS' && updatedShippingOptions) {
             shippingOptions = updatedShippingOptions;
             shippingMethodAmount = parseFloat(updatedShippingOptions.find(option => option.selected)?.amount.value || '0.00')
           }
-           */
+          */
 
           const purchaseUnitsAmount = {
             currency_code: amount.currency_code,
@@ -146,12 +145,6 @@ paypal
               },
             },
           };
-
-          console.log(JSON.stringify({
-            shippingOptions, 
-            shippingMethodAmount,
-            purchaseUnitsAmount
-          }, null, 4))
 
           return fetch(`/orders/${data.orderID}`, {
             method: "PATCH",
