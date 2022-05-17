@@ -116,7 +116,7 @@ paypal
 
           let shippingOptions = (shipping?.options || []).map((option) => ({
             ...option,
-            selected: option.label === data.selected_shipping_option.label,
+            selected: option.id === data.selected_shipping_option.id,
           }));
 
           // If shipping options are updated on address change
