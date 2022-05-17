@@ -27,7 +27,7 @@ paypal
       })
         .then((res) => res.json())
         .then(() => {
-          alert(`order captured id: ${data.orderID}`)
+          console.log("Order captured")
         })
         .catch(console.error);
     },
