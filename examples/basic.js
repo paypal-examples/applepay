@@ -23,7 +23,8 @@ paypal
     },
     onApprove(data, actions) {
       console.log("Order approved")
-
+      return actions.order.capture();
+/*
       fetch(`/capture/${data.orderID}`, {
         method: "post",
       })
@@ -32,6 +33,7 @@ paypal
           console.log("order captured")
         })
         .catch(console.error);
+        */
     },
   })
   .render("#applepay-btn");
