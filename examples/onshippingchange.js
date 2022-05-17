@@ -62,20 +62,18 @@ const order = {
 async function calculateShipping(shippingAddress) {
   const { postal_code, country_code, state, city } = shippingAddress;
 
-  // Merchant implemented endpoint, returns updated taxRate and shipping options
-  // based on new shipping address / postal code
+  // Merchant implemented service, returns updated taxRate and shipping options
+  // based on postal code update
   const res = await fetch("/calculate-shipping", {
     method: "post",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      shippingAddress: {
-        postal_code,
-        country_code,
-        state,
-        city
-      },
+      postal_code,
+      country_code,
+      state,
+      city
     }),
   });
 

@@ -70,12 +70,10 @@ async function calculateShipping(shippingAddress) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      shippingAddress: {
-        postal_code,
-        country_code,
-        state,
-        city
-      },
+      postal_code,
+      country_code,
+      state,
+      city
     }),
   });
 
