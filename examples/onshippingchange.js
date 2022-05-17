@@ -60,21 +60,29 @@ const order = {
 };
 
 async function calculateShipping(shippingAddress) {
+  const { postal_code, country_code, state, city } = shippingAddress;
+
+  // Merchant implemented endpoint, returns updated taxRate and shipping options
+  // based on new shipping address / postal code
   const res = await fetch("/calculate-shipping", {
     method: "post",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      shippingAddress,
+      shippingAddress: {
+        postal_code,
+        country_code,
+        state,
+        city
+      },
     }),
   });
 
-  const { taxRate, updatedShippingOptions } = await res.json();
+  const { updatedTaxRate, updatedShippingOptions } = await res.json();
 
-  // based on zipcode change
   return {
-    taxRate,
+    updatedTaxRate,
     updatedShippingOptions,
   };
 }
@@ -104,7 +112,7 @@ paypal
     async onShippingChange(data, actions) {
       const { amount, shipping } = order.purchase_units[0];
 
-      const { taxRate, updatedShippingOptions } = await calculateShipping(data.shipping_address);
+      const { updatedTaxRate, updatedShippingOptions } = await calculateShipping(data.shipping_address);
 
       const itemTotal = parseFloat(amount.breakdown.item_total.value);
 
@@ -112,7 +120,7 @@ paypal
         data.selected_shipping_option.amount.value
       );
 
-      const taxTotal = parseFloat(taxRate) * itemTotal;
+      const taxTotal = parseFloat(updatedTaxRate) * itemTotal;
 
       let shippingOptions = (shipping?.options || []).map((option) => ({
         ...option,

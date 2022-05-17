@@ -54,9 +54,9 @@ app.patch("/orders/:orderId", async (req, res) => {
 });
 
 app.post("/calculate-shipping", (req, res) => {
-  // mock sales tax rate
+  // mock data based on zipcode change
   res.json({
-    taxRate: 0.0725, // 7.25%
+    updatedTaxRate: 0.0725, // 7.25%
     updatedShippingOptions: [
       {
         id: "SHIP_123",
@@ -95,7 +95,7 @@ app.post("/calculate-shipping", (req, res) => {
 app.post("/capture/:orderId", async (req, res) => {
   // disable capture for demo app
   const DISABLE_CAPTURE = true;
-  
+
   if (DISABLE_CAPTURE) {
     return res.json({
       message: "capture disabled for demo",

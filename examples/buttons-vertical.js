@@ -60,21 +60,30 @@ const order = {
 };
 
 async function calculateShipping(shippingAddress) {
+  const { postal_code, country_code, state, city } = shippingAddress;
+
+  // Merchant implemented endpoint, returns updated taxRate and shipping options
+  // based on new shipping address / postal code
   const res = await fetch("/calculate-shipping", {
     method: "post",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      shippingAddress,
+      shippingAddress: {
+        postal_code,
+        country_code,
+        state,
+        city
+      },
     }),
   });
 
-  const { taxRate } = await res.json();
+  const { updatedTaxRate, updatedShippingOptions } = await res.json();
 
-  // based on zipcode change
   return {
-    taxRate,
+    updatedTaxRate,
+    updatedShippingOptions,
   };
 }
 
@@ -99,84 +108,59 @@ paypal
           console.error(err);
         });
     },
-    onShippingChange(data, actions) {
+    async onShippingChange(data, actions) {
       const { amount, shipping } = order.purchase_units[0];
 
-      return calculateShipping(data.shipping_address)
-        .then(({ taxRate }) => {
-          const itemTotal = parseFloat(amount.breakdown.item_total.value);
+      const { updatedTaxRate, updatedShippingOptions } = await calculateShipping(data.shipping_address);
 
-          const shippingMethodAmount = parseFloat(
-            data.selected_shipping_option.amount.value
-          );
+      const itemTotal = parseFloat(amount.breakdown.item_total.value);
 
-          const taxTotal = parseFloat(taxRate) * itemTotal;
+      let shippingMethodAmount = parseFloat(
+        data.selected_shipping_option.amount.value
+      );
 
-          const purchaseUnitsAmount = {
-            currency_code: amount.currency_code,
-            value: (itemTotal + taxTotal + shippingMethodAmount).toFixed(2),
-            breakdown: {
-              item_total: {
-                currency_code: amount.currency_code,
-                value: itemTotal.toFixed(2),
-              },
-              tax_total: {
-                currency_code: amount.currency_code,
-                value: taxTotal.toFixed(2),
-              },
-              shipping: {
-                currency_code: amount.currency_code,
-                value: shippingMethodAmount.toFixed(2),
+      const taxTotal = parseFloat(updatedTaxRate) * itemTotal;
+
+      let shippingOptions = (shipping?.options || []).map((option) => ({
+        ...option,
+        selected: option.id === data.selected_shipping_option.id,
+      }));
+
+      await fetch(`/orders/${data.orderID}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify([
+          {
+            op: "replace",
+            path: "/purchase_units/@reference_id=='default'/shipping/options",
+            value: shippingOptions,
+          },
+          {
+            op: "replace",
+            path: "/purchase_units/@reference_id=='default'/amount",
+            value: {
+              currency_code: amount.currency_code,
+              value: (itemTotal + taxTotal + shippingMethodAmount).toFixed(2),
+              breakdown: {
+                item_total: {
+                  currency_code: amount.currency_code,
+                  value: itemTotal.toFixed(2),
+                },
+                tax_total: {
+                  currency_code: amount.currency_code,
+                  value: taxTotal.toFixed(2),
+                },
+                shipping: {
+                  currency_code: amount.currency_code,
+                  value: shippingMethodAmount.toFixed(2),
+                },
               },
             },
-          };
-
-          const shippingOptions = (shipping?.options || []).map((option) => ({
-            ...option,
-            selected: option.label === data.selected_shipping_option.label,
-          }));
-
-          return fetch(`/orders/${data.orderID}`, {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            // https://developer.paypal.com/api/orders/v2/#orders_patch
-            body: JSON.stringify([
-              /*
-               * Shipping Options
-               */
-              {
-                op: "replace",
-                path: "/purchase_units/@reference_id=='default'/shipping/options",
-                value: shippingOptions,
-              },
-
-              /*
-               * Amount
-               */
-              {
-                op: "replace",
-                path: "/purchase_units/@reference_id=='default'/amount",
-                value: purchaseUnitsAmount,
-              },
-            ]),
-          })
-            .then((res) => {
-              if (!res.ok) {
-                throw new Error("patching order");
-              }
-              return actions.resolve();
-            })
-            .catch((err) => {
-              console.error(err);
-              return actions.reject(err);
-            });
-        })
-        .catch((err) => {
-          console.error(err);
-          return actions.reject(err);
-        });
+          },
+        ]),
+      })
     },
   })
   .render("#applepay-btn");
