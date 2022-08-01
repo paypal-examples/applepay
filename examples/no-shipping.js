@@ -37,14 +37,13 @@ paypal
       return actions.order.create(order)
     },
     async onApprove(data, actions) {
-      await fetch(`/capture/${data.orderID}`, {
+      const res = await fetch(`/capture/${data.orderID}`, {
         method: 'post',
       })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log('order captured')
-        })
-        .catch(console.error)
+      if (!res.ok) {
+        throw new Error('capture failed')
+      }
+      alert('You will not be charged')
     },
   })
   .render('#applepay-btn')
