@@ -36,10 +36,8 @@ paypal
     createOrder(data, actions) {
       return actions.order.create(order)
     },
-    onApprove(data, actions) {
-      console.log('Order approved')
-
-      fetch(`/capture/${data.orderID}`, {
+    async onApprove(data, actions) {
+      await fetch(`/capture/${data.orderID}`, {
         method: 'post',
       })
         .then((res) => res.json())
