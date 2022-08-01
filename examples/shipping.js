@@ -117,17 +117,14 @@ paypal
     createOrder(data, actions) {
       return actions.order.create(order)
     },
-    onApprove(data, actions) {
-      fetch(`/capture/${data.orderID}`, {
+    async onApprove(data, actions) {
+      const res = await fetch(`/capture/${data.orderID}`, {
         method: 'post',
       })
-        .then((res) => res.json())
-        .then(() => {
-          console.log(`Order capture success - Order ID ${data.orderID}`)
-        })
-        .catch((err) => {
-          console.error(err)
-        })
+      if (!res.ok) {
+        throw new Error('capture failed')
+      }
+      alert('You will not be charged')
     },
     async onShippingChange(data, actions) {
       const { amount, shipping } = order.purchase_units[0]
