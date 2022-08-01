@@ -17,19 +17,25 @@
     <div class="container">
       <div id="safari-msg"></div>
 
-      <br /><br /><br />
+      <br />
+      <br />
+      <br />
 
       <img src="/assets/Apple_Pay_Mark.svg" width="50" />
 
-      <br /><br />
+      <br />
+      <br />
       <h5>PayPal SDK Examples</h5>
       <ul class="list-group list-group-flush">
-        <a href="/basic.html" class="list-group-item list-group-item-action">
-          Basic Payment
+        <a
+          href="/buttons-vertical.html"
+          class="list-group-item list-group-item-action"
+        >
+          Vertical Buttons Stack
         </a>
 
-        <a href="/no-shipping.html" class="list-group-item list-group-item-action">
-          No Shipping
+        <a href="/basic.html" class="list-group-item list-group-item-action">
+          Basic Payment
         </a>
 
         <a
@@ -40,10 +46,10 @@
         </a>
 
         <a
-          href="/buttons-vertical.html"
+          href="/no-shipping.html"
           class="list-group-item list-group-item-action"
         >
-          Paypal Buttons Vertical
+          No Shipping
         </a>
       </ul>
     </div>
@@ -51,8 +57,8 @@
     <script>
       /* Development message - remove in prod */
       if (!window.ApplePaySession) {
-        document.getElementById("safari-msg").innerText =
-          "You must be on safari";
+        document.getElementById('safari-msg').innerText =
+          'You must be on safari'
       }
     </script>
   </body>
