@@ -4,37 +4,39 @@ const order = {
   purchase_units: [
     {
       amount: {
-        currency_code: "USD",
-        value: "0.02"
-      }
+        currency_code: 'USD',
+        value: '0.02',
+      },
     },
-  ],
-  application_context: {
-    shipping_preference: "NO_SHIPPING"
-  }
-};
+  ]
+}
 
 paypal
   .Buttons({
     fundingSource: paypal.FUNDING.APPLEPAY,
     style: {
-      label: "pay",
-      color: "black",
+      label: 'pay',
+      color: 'black',
+    },
+    paymentRequest: {
+      applepay: {
+        requiredShippingContactFields: [],
+      },
     },
     createOrder(data, actions) {
-      return actions.order.create(order);
+      return actions.order.create(order)
     },
     onApprove(data, actions) {
-      console.log("Order approved")
+      console.log('Order approved')
 
       fetch(`/capture/${data.orderID}`, {
-        method: "post",
+        method: 'post',
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log("order captured")
+          console.log('order captured')
         })
-        .catch(console.error);
+        .catch(console.error)
     },
   })
-  .render("#applepay-btn");
+  .render('#applepay-btn')

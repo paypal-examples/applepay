@@ -4,140 +4,165 @@ const order = {
   purchase_units: [
     {
       amount: {
-        currency_code: "USD",
-        value: "120.00",
+        currency_code: 'USD',
+        value: '120.00',
         breakdown: {
           item_total: {
-            currency_code: "USD",
-            value: "100.00",
+            currency_code: 'USD',
+            value: '100.00',
           },
           tax_total: {
-            currency_code: "USD",
-            value: "10.00",
+            currency_code: 'USD',
+            value: '10.00',
           },
           shipping: {
-            currency_code: "USD",
-            value: "10.00",
+            currency_code: 'USD',
+            value: '10.00',
           },
         },
       },
       shipping: {
         options: [
           {
-            id: "SHIP_123",
-            label: "1-3 Day Shipping",
-            type: "SHIPPING",
+            id: 'SHIP_123',
+            label: '1-3 Day Shipping',
+            type: 'SHIPPING',
             selected: true,
             amount: {
-              value: "10.00",
-              currency_code: "USD",
+              value: '10.00',
+              currency_code: 'USD',
             },
           },
           {
-            id: "SHIP_456",
-            label: "3-6 Day Shipping",
-            type: "SHIPPING",
+            id: 'SHIP_456',
+            label: '3-6 Day Shipping',
+            type: 'SHIPPING',
             selected: false,
             amount: {
-              value: "5.00",
-              currency_code: "USD",
+              value: '5.00',
+              currency_code: 'USD',
             },
           },
           {
-            id: "SHIP_789",
-            label: "In Store Pickup",
-            type: "PICKUP",
+            id: 'SHIP_789',
+            label: 'In Store Pickup',
+            type: 'PICKUP',
             selected: false,
             amount: {
-              value: "0.00",
-              currency_code: "USD",
+              value: '0.00',
+              currency_code: 'USD',
             },
           },
         ],
       },
     },
   ],
-};
+}
 
 async function calculateShipping(shippingAddress) {
-  const { postal_code, country_code, state, city } = shippingAddress;
+  const { postal_code, country_code, state, city } = shippingAddress
 
   // Merchant implemented service, returns updated taxRate and shipping options
   // based on postal code update
-  const res = await fetch("/calculate-shipping", {
-    method: "post",
+  const res = await fetch('/calculate-shipping', {
+    method: 'post',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       postal_code,
       country_code,
       state,
-      city
+      city,
     }),
-  });
+  })
 
-  const { updatedTaxRate, updatedShippingOptions } = await res.json();
+  const { updatedTaxRate, updatedShippingOptions } = await res.json()
 
   return {
     updatedTaxRate,
     updatedShippingOptions,
-  };
+  }
 }
 
 paypal
   .Buttons({
     fundingSource: paypal.FUNDING.APPLEPAY,
     style: {
-      label: "pay",
-      color: "black",
+      label: 'pay',
+      color: 'black',
+    },
+    paymentRequest: {
+      applepay: {
+        requiredShippingContactFields: [
+          'postalAddress',
+          'name',
+          'phone',
+          'email',
+        ],
+        shippingContact: {
+          locality: 'Cupertino',
+          country: 'United States',
+          postalCode: '95014-2083',
+          administrativeArea: 'CA',
+          emailAddress: 'ravipatel@example.com',
+          familyName: 'Patel',
+          addressLines: ['1 Infinite Loop'],
+          givenName: 'Ravi',
+          countryCode: 'US',
+          phoneNumber: '(408) 555-5555',
+        },
+      },
     },
     createOrder(data, actions) {
-      return actions.order.create(order);
+      return actions.order.create(order)
     },
     onApprove(data, actions) {
       fetch(`/capture/${data.orderID}`, {
-        method: "post",
+        method: 'post',
       })
         .then((res) => res.json())
         .then(() => {
-          console.log(`Order capture success - Order ID ${data.orderID}`);
+          console.log(`Order capture success - Order ID ${data.orderID}`)
         })
         .catch((err) => {
-          console.error(err);
-        });
+          console.error(err)
+        })
     },
     async onShippingChange(data, actions) {
-      const { amount, shipping } = order.purchase_units[0];
+      const { amount, shipping } = order.purchase_units[0]
 
-      const { updatedTaxRate, updatedShippingOptions } = await calculateShipping(data.shipping_address);
+      const {
+        updatedTaxRate,
+        updatedShippingOptions,
+      } = await calculateShipping(data.shipping_address)
 
-      const itemTotal = parseFloat(amount.breakdown.item_total.value);
+      const itemTotal = parseFloat(amount.breakdown.item_total.value)
 
       let shippingMethodAmount = parseFloat(
-        data.selected_shipping_option.amount.value
-      );
+        data.selected_shipping_option.amount.value,
+      )
 
-      const taxTotal = parseFloat(updatedTaxRate) * itemTotal;
+      const taxTotal = parseFloat(updatedTaxRate) * itemTotal
 
       let shippingOptions = (shipping?.options || []).map((option) => ({
         ...option,
         selected: option.id === data.selected_shipping_option.id,
-      }));
+      }))
 
       await fetch(`/orders/${data.orderID}`, {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify([
           {
-            op: "replace",
+            op: 'replace',
             path: "/purchase_units/@reference_id=='default'/shipping/options",
             value: shippingOptions,
           },
           {
-            op: "replace",
+            op: 'replace',
             path: "/purchase_units/@reference_id=='default'/amount",
             value: {
               currency_code: amount.currency_code,
@@ -162,4 +187,4 @@ paypal
       })
     },
   })
-  .render("#applepay-btn");
+  .render('#applepay-btn')
