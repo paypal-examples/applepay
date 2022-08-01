@@ -5,10 +5,20 @@ const order = {
     {
       amount: {
         currency_code: 'USD',
-        value: '0.02',
+        value: '107.25',
+        breakdown: {
+          item_total: {
+            currency_code: 'USD',
+            value: '100.00',
+          },
+          tax_total: {
+            currency_code: 'USD',
+            value: '7.25',
+          },
+        },
       },
     },
-  ]
+  ],
 }
 
 paypal
