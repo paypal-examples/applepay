@@ -46,6 +46,96 @@ paypal
     .render("#btn");
 ```
 
+
+
+#### No Shipping
+```
+paypal
+    .Buttons({
+        style: {
+            label: "pay"
+        },
+        paymentRequest: {
+            applepay: {
+                requiredShippingContactFields: [],
+            },
+        },
+        createOrder(data, actions) {
+            return actions.order.create(order);
+        },
+        onApprove(data, actions) {
+
+        },
+        onError(err) {
+            logResponse("Error", err)
+        },
+        onCancel() {
+            logResponse("onCancel", {})
+        }
+    })
+    .render("#btn");
+```
+
+#### Shipping Contact prefill
+```
+paypal
+    .Buttons({
+        style: {
+            label: "pay"
+        },
+        paymentRequest: {
+            applepay: {
+                requiredShippingContactFields: [
+                    "postalAddress", 
+                    "name", 
+                    "phone", 
+                    "email"
+                ],
+                shippingContact: {
+                    locality: "Cupertino",
+                    country: "United States",
+                    postalCode: "95014-2083",
+                    administrativeArea: "CA",
+                    emailAddress: "ravipatel@example.com",
+                    familyName: "Patel",
+                    addressLines: ["1 Infinite Loop"],
+                    givenName: "Ravi",
+                    countryCode: "US",
+                    phoneNumber: "(408) 555-5555",
+                },
+            },
+        },
+        createOrder(data, actions) {
+            return actions.order.create(order);
+        },
+        onApprove(data, actions) {},
+    })
+    .render("#btn");
+```
+
+#### DigitalGoods
+```
+paypal
+    .Buttons({
+        style: {
+            label: "pay"
+        },
+        paymentRequest: {
+            applepay: {
+                requiredShippingContactFields: [
+                   "email"
+                ]
+            },
+        },
+        createOrder(data, actions) {
+            return actions.order.create(order);
+        },
+        onApprove(data, actions) {},
+    })
+    .render("#btn");
+```
+
+
 #### Full Shipping Collection - onShippingChange
 - Address Change
 - Shipping Option Change
@@ -216,91 +306,3 @@ paypal
   .render('#applepay-btn')
 
 ```
-
-#### No Shipping
-```
-paypal
-    .Buttons({
-        style: {
-            label: "pay"
-        },
-        paymentRequest: {
-            applepay: {
-                requiredShippingContactFields: [],
-            },
-        },
-        createOrder(data, actions) {
-            return actions.order.create(order);
-        },
-        onApprove(data, actions) {
-
-        },
-        onError(err) {
-            logResponse("Error", err)
-        },
-        onCancel() {
-            logResponse("onCancel", {})
-        }
-    })
-    .render("#btn");
-```
-
-#### Shipping Contact prefill
-```
-paypal
-    .Buttons({
-        style: {
-            label: "pay"
-        },
-        paymentRequest: {
-            applepay: {
-                requiredShippingContactFields: [
-                    "postalAddress", 
-                    "name", 
-                    "phone", 
-                    "email"
-                ],
-                shippingContact: {
-                    locality: "Cupertino",
-                    country: "United States",
-                    postalCode: "95014-2083",
-                    administrativeArea: "CA",
-                    emailAddress: "ravipatel@example.com",
-                    familyName: "Patel",
-                    addressLines: ["1 Infinite Loop"],
-                    givenName: "Ravi",
-                    countryCode: "US",
-                    phoneNumber: "(408) 555-5555",
-                },
-            },
-        },
-        createOrder(data, actions) {
-            return actions.order.create(order);
-        },
-        onApprove(data, actions) {},
-    })
-    .render("#btn");
-```
-
-#### DigitalGoods
-```
-paypal
-    .Buttons({
-        style: {
-            label: "pay"
-        },
-        paymentRequest: {
-            applepay: {
-                requiredShippingContactFields: [
-                   "email"
-                ]
-            },
-        },
-        createOrder(data, actions) {
-            return actions.order.create(order);
-        },
-        onApprove(data, actions) {},
-    })
-    .render("#btn");
-```
-
