@@ -100,7 +100,7 @@ paypal
           'phone',
           'email',
         ],
-        shippingContact: {
+        /*shippingContact: {
           locality: 'Cupertino',
           country: 'United States',
           postalCode: '95014-2083',
@@ -111,7 +111,7 @@ paypal
           givenName: 'Ravi',
           countryCode: 'US',
           phoneNumber: '(408) 555-5555',
-        },
+        },*/
       },
     },
     createOrder(data, actions) {
