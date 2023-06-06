@@ -1,13 +1,19 @@
 FROM node:16
 
-ADD . /
-
 ARG CLIENT_ID
 ARG CLIENT_SECRET
+ARG NODE_ENV
 
 ENV CLIENT_ID=$CLIENT_ID
 ENV CLIENT_SECRET=$CLIENT_SECRET
+ENV NODE_ENV=$NODE_ENV
 
-RUN npm ci --verbose && npm cache clean --force --verbose
+WORKDIR /app
+COPY package.json ./
+RUN npm install --production
+
+COPY . .
+
+
 
 CMD ["node", "server.js"]
