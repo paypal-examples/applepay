@@ -1,4 +1,4 @@
-FROM node:16-slim
+FROM node:16
 
 ADD . /
 
@@ -8,6 +8,6 @@ ARG CLIENT_SECRET
 ENV CLIENT_ID=$CLIENT_ID
 ENV CLIENT_SECRET=$CLIENT_SECRET
 
-RUN npm ci && npm cache clean --force
+RUN npm ci && npm cache clean --force --verbose
 
-CMD node index.js
+CMD ["node", "server.js"]
