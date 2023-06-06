@@ -41,6 +41,7 @@ async function setupApplepay() {
       },
     };
 
+    // eslint-disable-next-line no-undef
     var session = new ApplePaySession(4, paymentRequest);
 
     session.onvalidatemerchant = (event) => {
@@ -57,7 +58,7 @@ async function setupApplepay() {
         });
     };
 
-    session.onpaymentmethodselected = (event) => {
+    session.onpaymentmethodselected = () => {
       session.completePaymentMethodSelection({
         newTotal: paymentRequest.total,
       });
@@ -117,7 +118,7 @@ async function setupApplepay() {
       }
     };
 
-    session.oncancel  = (event) => {
+    session.oncancel  = () => {
       console.log("Apple Pay Cancelled !!")
     }
 
@@ -125,8 +126,9 @@ async function setupApplepay() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", (event) => {
+document.addEventListener("DOMContentLoaded", () => {
 
+  // eslint-disable-next-line no-undef
   if(ApplePaySession?.supportsVersion(4) && ApplePaySession?.canMakePayments()) {
     setupApplepay().catch(console.error);
   }

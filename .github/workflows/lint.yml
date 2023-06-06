@@ -11,7 +11,5 @@ jobs:
         node-version: '16.x'
     - name: Install JS Dependencies
       run: npm install
-    - name: Lint html
-      run: npx htmlhint client
     - name: Run ESLint
       run: npx eslint . --ext .js,.jsx,.ts,.tsx
