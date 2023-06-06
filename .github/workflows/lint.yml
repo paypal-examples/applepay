@@ -5,12 +5,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    # Setup .npmrc file to publish to npm
-    - uses: actions/setup-node@v1
+    - uses: actions/setup-node@v3
       with:
-        node-version: '16.x'
+        node-version: '16'
         appdir: "advanced-integration"
     - name: Install JS Dependencies
-      run: npm install
+      run: cd advanced-integration &&  npm install
     - name: Run ESLint
-      run: npx eslint . --ext .js,.jsx,.ts,.tsx
+      run: cd advanced-integration &&  npm run lint
