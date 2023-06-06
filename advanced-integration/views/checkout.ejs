@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="apple-touch-icon" href="/assets/logo.png" />
+
+    <!-- Include Apple SDK Script -->
+    <script src="https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js"></script>
+    <!-- Include PayPal SDK Script with components=applepay for Custom Applepay Component-->
+    <script
+      src="https://www.paypal.com/sdk/js?components=applepay&client-id=<%= clientId %>"
+      data-client-token="<%= clientToken %>" data-partner-attribution-id="APPLEPAY"
+    ></script>
+
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+    crossorigin="anonymous"
+  />
+
+  </head>
+  <body>
+    <div class="container">
+      <h3>Sample Applepay Integration</h3>
+      <h6>Basic (no amount breakdown / no shipping)</h6>
+      <div id="applepay-container"></div>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>

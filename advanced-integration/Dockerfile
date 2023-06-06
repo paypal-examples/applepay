@@ -10,4 +10,4 @@ ENV CLIENT_SECRET=$CLIENT_SECRET
 
 RUN npm ci && npm cache clean --force
 
-CMD node server/index.js
+CMD node index.js
