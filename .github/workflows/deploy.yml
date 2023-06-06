@@ -18,6 +18,7 @@ jobs:
           appdir: "advanced-integration"
           healthcheck: "https://applepay-paypal-js-sdk.herokuapp.com/health"
           usedocker: true
+          dontuseforce: false
           docker_build_args: |
             NODE_ENV
             CLIENT_ID

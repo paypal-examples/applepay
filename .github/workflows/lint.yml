@@ -8,7 +8,6 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: '16'
-        appdir: "advanced-integration"
     - name: Install JS Dependencies
       run: cd advanced-integration &&  npm install
     - name: Run ESLint
