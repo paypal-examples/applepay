@@ -39,6 +39,14 @@ app.post("/api/orders/:orderID/capture", async (req, res) => {
   }
 });
 
+// health check
+app.get("/check" ,(req,res) => {
+  res.json({
+    message: "ok",
+    env: process.env.NODE_ENV
+  })
+})
+
 app.listen(PORT, () => {
   console.log(`Server listening at http://localhost:${PORT}/`);
 });
