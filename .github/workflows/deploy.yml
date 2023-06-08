@@ -22,8 +22,8 @@ jobs:
           docker_build_args: |
             NODE_ENV
             CLIENT_ID
-            CLIENT_SECRET
+            APP_SECRET
         env:
           NODE_ENV: staging
           CLIENT_ID: ${{secrets.CLIENT_ID}}
-          CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
+          APP_SECRET: ${{secrets.APP_SECRET}}
