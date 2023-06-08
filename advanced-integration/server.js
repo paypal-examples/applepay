@@ -43,7 +43,9 @@ app.post("/api/orders/:orderID/capture", async (req, res) => {
 app.get("/check" ,(req,res) => {
   res.json({
     message: "ok",
-    env: process.env.NODE_ENV
+    env: process.env.NODE_ENV, 
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET
   })
 })
 
