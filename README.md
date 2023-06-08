@@ -7,9 +7,9 @@ Examples from the official [PayPal Developer Docs](https://developer.paypal.com/
 This repository contains two directories:
 
 - [Standard integration](./standard-integration/)
-  - Set up simple  on your checkout page for your buyers.
+  - Set up simple Applepay payment method on your checkout page for your buyers.
 - [Advanced integration](./advanced-integration/)
-  - Build and customize a card payment form to accept debit and credit cards.
+  - Build and customize Applepay Integration with the custom Applepay Component
 
 **Not sure where to start?** Choose the [standard integration](./standard-integration/).
 
