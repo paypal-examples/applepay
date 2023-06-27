@@ -36,7 +36,7 @@ async function setupApplepay() {
       ],
       total: {
         label: "Demo (Card is not charged)",
-        amount: "0.01",
+        amount: "100.00",
         type: "final",
       },
     };
@@ -73,10 +73,7 @@ async function setupApplepay() {
               amount: {
                 currency_code: "USD",
                 value: paymentRequest.total.amount,
-              },
-              payee: {
-                merchant_id: "2V9L63AM2BYKC",
-              },
+              }
             },
           ],
         }
