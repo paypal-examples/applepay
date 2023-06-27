@@ -66,25 +66,12 @@ async function setupApplepay() {
 
     session.onpaymentauthorized = async (event) => {
       try {
-        const order = {
-          intent: "CAPTURE",
-          purchase_units: [
-            {
-              amount: {
-                currency_code: "USD",
-                value: paymentRequest.total.amount,
-              }
-            },
-          ],
-        }
-
         /* Create Order on the Server Side */
-        const orderResonse = await fetch(`/orders`,{
+        const orderResonse = await fetch(`/api/orders`,{
           method:'POST',
           headers : {
             'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(order)
+          }
         })
         if(!orderResonse.ok) {
             throw new Error("error creating order")

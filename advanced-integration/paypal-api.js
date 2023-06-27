@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 
 // set some important variables
-const { CLIENT_ID, APP_SECRET } = process.env;
+const { CLIENT_ID, APP_SECRET, MERCHANT_ID } = process.env;
 const base = "https://api-m.sandbox.paypal.com";
 
 // call the create order method
@@ -23,6 +23,9 @@ export async function createOrder() {
             currency_code: "USD",
             value: purchaseAmount,
           },
+          payee: {
+            merchant_id: MERCHANT_ID,
+          }
         },
       ],
     }),
