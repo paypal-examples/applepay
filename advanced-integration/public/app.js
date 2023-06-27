@@ -87,7 +87,7 @@ async function setupApplepay() {
         /*
         * Capture order (must currently be made on server)
         */
-        await fetch(`/capture/${id}`, {
+        await fetch(`/api/orders/${id}/capture`, {
           method: 'POST',
         });
 
