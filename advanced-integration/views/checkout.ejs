@@ -14,11 +14,17 @@
       }
 
       .container {
+        display: flex;
+        flex-direction: column;
         text-align: center;
         background-color: lightgray;
         max-width: 500px;
         min-height: 15em;
         padding: 20px;
+      }
+
+      #applepay-container {
+        flex-grow: 1;
       }
     </style>
 
@@ -44,7 +50,7 @@
       <h6>Basic Integration (no amount breakdown / no shipping)</h6>
       <div id="applepay-container"></div>
 
-      <p><i> You wont be charged any money. Test with Sandbox Applepay Cards. You can find them <a target="_blank" src="https://developer.apple.com/apple-pay/sandbox-testing/"></a>here</i></p>
+      <div><i> You wont be charged any money. Try with Apple Pay Test Cards on Sandbox. You can find them <a target="_blank" src="https://developer.apple.com/apple-pay/sandbox-testing/">here</a></i></div>
     </div>
     <script src="app.js"></script>
   </body>
