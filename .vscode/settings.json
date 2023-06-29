@@ -3,6 +3,9 @@
         "appdir",
         "appl",
         "buttonstyle",
+        "onpaymentauthorized",
+        "onpaymentmethodselected",
+        "onvalidatemerchant",
         "usedocker"
     ]
 }

@@ -42,7 +42,7 @@ async function setupApplepay() {
     };
 
     // eslint-disable-next-line no-undef
-    var session = new ApplePaySession(4, paymentRequest);
+    let session = new ApplePaySession(4, paymentRequest);
 
     session.onvalidatemerchant = (event) => {
       applepay
@@ -67,17 +67,17 @@ async function setupApplepay() {
     session.onpaymentauthorized = async (event) => {
       try {
         /* Create Order on the Server Side */
-        const orderResonse = await fetch(`/api/orders`,{
+        const orderResponse = await fetch(`/api/orders`,{
           method:'POST',
           headers : {
             'Content-Type': 'application/json'
           }
         })
-        if(!orderResonse.ok) {
+        if(!orderResponse.ok) {
             throw new Error("error creating order")
         }
 
-        const { id } = await orderResonse.json()
+        const { id } = await orderResponse.json()
         console.log({ id })
         /**
          * Confirm Payment 
