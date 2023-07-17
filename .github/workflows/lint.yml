@@ -1,7 +1,7 @@
 name: Lint
 on: [push, pull_request]
 jobs:
-  build:
+  build-advanced-integration:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -12,3 +12,15 @@ jobs:
       run: cd advanced-integration &&  npm install
     - name: Run ESLint
       run: cd advanced-integration &&  npm run lint
+  build-standard-integration:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+    - name: Install JS Dependencies
+      run: cd standard-integration &&  npm install
+    - name: Run ESLint
+      run: cd standard-integration &&  npm run lint
+  
