@@ -1,6 +1,6 @@
 # PayPal ApplepPay Example Code
 
-Examples from the official [PayPal Developer Docs](https://developer.paypal.com/).
+Examples from the official [PayPal Developer Docs for ApplePay](https://developer.paypal.com/docs/checkout/apm/apple-pay/).
 
 ## Introduction and Overview
 
@@ -8,6 +8,7 @@ This repository contains two directories:
 
 - [Standard integration](./standard-integration/)
   - Set up simple Applepay payment method on your checkout page for your buyers.
+  - 
 - [Advanced integration](./advanced-integration/)
   - Build and customize Applepay Integration with the custom Applepay Component
 
@@ -15,7 +16,7 @@ This repository contains two directories:
 
 ### The PayPal JavaScript SDK
 
-These examples use the [PayPal JavaScript SDK](https://developer.paypal.com/sdk/js/) to display PayPal supported payment methods and provide a seamless checkout experience for your buyers.
+These examples use the [PayPal JavaScript SDK](https://developer.paypal.com/sdk/js/) to display ApplePay checkout button for your buyers
 
 The SDK has several [configuration options](https://developer.paypal.com/sdk/js/configuration/) available. The examples in this repository provide the most minimal example possible to complete a successful transaction.
 
