@@ -32,29 +32,3 @@ jobs:
           APP_SECRET: ${{secrets.APP_SECRET}}
           CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
           MERCHANT_ID: ${{secrets.MERCHANT_ID}}
-  deploy-standard-integration:
-    name: This Deploys the Latest version of SPB Applepay Integration 
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: akhileshns/heroku-deploy@v3.7.8 # This is the action
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}} 
-          heroku_app_name: applepay-paypal-spb-js-sdk # Must be unique in Heroku
-          heroku_email: ${{secrets.HEROKU_EMAIL}}
-          appdir: "standard-integration"
-          healthcheck: "https://applepay-paypal-js-sdk.herokuapp.com/health"
-          usedocker: true
-          dontuseforce: false
-          docker_build_args: |
-            NODE_ENV
-            CLIENT_ID
-            APP_SECRET
-            CLIENT_SECRET
-            MERCHANT_ID
-        env:
-          NODE_ENV: staging
-          CLIENT_ID: ${{secrets.CLIENT_ID}}
-          APP_SECRET: ${{secrets.APP_SECRET}}
-          CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
-          MERCHANT_ID: ${{secrets.MERCHANT_ID}}
