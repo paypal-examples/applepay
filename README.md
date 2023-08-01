@@ -1,4 +1,4 @@
-# PayPal ApplepPay Example Code
+# PayPal ApplePay Example Code
 
 Examples from the official [PayPal Developer Docs for ApplePay](https://developer.paypal.com/docs/checkout/apm/apple-pay/).
 
