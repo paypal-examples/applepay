@@ -4,15 +4,12 @@ Examples from the official [PayPal Developer Docs for ApplePay](https://develope
 
 ## Introduction and Overview
 
-This repository contains two directories:
+This repository contains Integration Example for ApplePay
 
-- [Standard integration](./standard-integration/)
-  - Set up simple Applepay payment method on your checkout page for your buyers.
-  - 
+
 - [Advanced integration](./advanced-integration/)
   - Build and customize Applepay Integration with the custom Applepay Component
 
-**Not sure where to start?** Choose the [standard integration](./standard-integration/).
 
 ### The PayPal JavaScript SDK
 
