@@ -15,7 +15,8 @@
     "dotenv": "^16.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.3",
-    "node-fetch": "^3.2.1"
+    "node-fetch": "^3.2.1",
+    "kill-port": "2.1.0"
   },
   "devDependencies": {
     "eslint": "^7.22.0"

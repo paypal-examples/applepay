@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import * as paypal from "./paypal-api.js";
-const {PORT = 8888} = process.env;
+const { PORT = 8888 } = process.env;
 
 const app = express();
 app.set("view engine", "ejs");
@@ -9,7 +9,7 @@ app.use(express.static("public"));
 
 // render checkout page with client id & unique client token
 app.get("/", async (req, res) => {
-  const clientId = process.env.CLIENT_ID, merchantId = process.env.MERCHANT_ID;
+  const clientId = process.env.PAYPAL_CLIENT_ID, merchantId = process.env.MERCHANT_ID;
   try {
     const clientToken = await paypal.generateClientToken();
     res.render("checkout", { clientId, clientToken, merchantId });
@@ -40,13 +40,13 @@ app.post("/api/orders/:orderID/capture", async (req, res) => {
 });
 
 // health check
-app.get("/check" ,(req,res) => {
+app.get("/check", (req, res) => {
   res.json({
     message: "ok",
-    env: process.env.NODE_ENV, 
-    clientId: process.env.CLIENT_ID,
-    appSecret: process.env.APP_SECRET || "Couldn't load App Secret",
-    clientSecret: process.env.CLIENT_SECRET,
+    env: process.env.NODE_ENV,
+    clientId: process.env.PAYPAL_CLIENT_ID,
+    appSecret: process.env.PAYPAL_APP_SECRET || "Couldn't load App Secret",
+    clientSecret: process.env.PAYPAL_CLIENT_SECRET,
     merchantId: process.env.MERCHANT_ID
   })
 })
