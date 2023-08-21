@@ -16,7 +16,7 @@
     "ejs": "^3.1.6",
     "express": "^4.17.3",
     "node-fetch": "^3.2.1",
-    "kill-port": "2.1.0"
+    "kill-port": "^2.0.1"
   },
   "devDependencies": {
     "eslint": "^7.22.0"
