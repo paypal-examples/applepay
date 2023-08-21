@@ -42,4 +42,4 @@ You'll need a version of node >= 14 which can be downloaded from the [Node.js we
 See a [hosted version ](https://applepay-paypal-js-sdk.herokuapp.com)of the sample
 
 ### PayPal Codespaces Links
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/paypal-examples/applepay-sandbox)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/paypal-examples/applepay)
