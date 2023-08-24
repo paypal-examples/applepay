@@ -5,13 +5,13 @@
   "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
   "postCreateCommand": "npm install",
   "postAttachCommand": {
-    "Start server": "CI=true npx kill-port --yes 8080 && npm start"
+    "Start server": "CI=true npx kill-port --yes 8888 && npm start"
   },
   "forwardPorts": [
-    8080
+    8888
   ],
   "portsAttributes": {
-    "8080": {
+    "8888": {
       "label": "Preview of Apple Pay Flow",
       "onAutoForward": "openPreview"
     }
