@@ -46,7 +46,7 @@ app.get("/check", (req, res) => {
     env: process.env.NODE_ENV,
     clientId: process.env.CLIENT_ID,
     appSecret: process.env.APP_SECRET || "Couldn't load App Secret",
-    clientSecret: process.env.PAYPAL_CLIENT_SECRET,
+    clientSecret: process.env.CLIENT_SECRET,
     merchantId: process.env.MERCHANT_ID
   })
 })

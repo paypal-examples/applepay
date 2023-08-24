@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js",
+    "start": "node server.js",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "author": "",
@@ -15,9 +15,7 @@
     "dotenv": "^16.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.3",
-    "node-fetch": "^3.2.1",
-    "kill-port": "^2.0.1",
-    "nodemon": "^3.0.1"
+    "node-fetch": "^3.2.1"
   },
   "devDependencies": {
     "eslint": "^7.22.0"
