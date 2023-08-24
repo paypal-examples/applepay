@@ -17,13 +17,13 @@
     }
   },
   "secrets": {
-    "PAYPAL_CLIENT_ID": {
+    "CLIENT_ID": {
       "description": "Sandbox client ID of the application.",
-      "documentationUrl": "https://developer.paypal.com/api/rest/"
+      "documentationUrl": "https://developer.paypal.com/dashboard/applications/sandbox"
     },
-    "PAYPAL_APP_SECRET": {
+    "APP_SECRET": {
       "description": "Sandbox secret of the application.",
-      "documentationUrl": "https://developer.paypal.com/api/rest/"
+      "documentationUrl": "https://developer.paypal.com/dashboard/applications/sandbox"
     }
   },
   "customizations": {

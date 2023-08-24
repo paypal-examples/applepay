@@ -9,7 +9,7 @@ app.use(express.static("public"));
 
 // render checkout page with client id & unique client token
 app.get("/", async (req, res) => {
-  const clientId = process.env.PAYPAL_CLIENT_ID, merchantId = process.env.MERCHANT_ID;
+  const clientId = process.env.CLIENT_ID, merchantId = process.env.MERCHANT_ID;
   try {
     const clientToken = await paypal.generateClientToken();
     res.render("checkout", { clientId, clientToken, merchantId });
@@ -44,8 +44,8 @@ app.get("/check", (req, res) => {
   res.json({
     message: "ok",
     env: process.env.NODE_ENV,
-    clientId: process.env.PAYPAL_CLIENT_ID,
-    appSecret: process.env.PAYPAL_APP_SECRET || "Couldn't load App Secret",
+    clientId: process.env.CLIENT_ID,
+    appSecret: process.env.APP_SECRET || "Couldn't load App Secret",
     clientSecret: process.env.PAYPAL_CLIENT_SECRET,
     merchantId: process.env.MERCHANT_ID
   })
