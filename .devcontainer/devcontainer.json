@@ -24,6 +24,10 @@
     "APP_SECRET": {
       "description": "Sandbox secret of the application.",
       "documentationUrl": "https://developer.paypal.com/dashboard/applications/sandbox"
+    },
+    "MERCHANT_ID":{
+      "description": "Sandbox merchant ID of the application.",
+      "documentationUrl": "https://developer.paypal.com/dashboard/applications/sandbox"
     }
   },
   "customizations": {
