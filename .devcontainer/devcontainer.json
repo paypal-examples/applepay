@@ -1,11 +1,11 @@
 // For more details, see https://aka.ms/devcontainer.json.
 {
   "name": "Apple Pay",
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/advanced-integration/",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
-  "postCreateCommand": "npm install",
+  "postCreateCommand": "cd advanced-integration && npm install",
   "postAttachCommand": {
-    "Start server": "CI=true npx kill-port --yes 8888 && npm start"
+    "Start server": "cd advanced-integration && CI=true npx kill-port --yes 8888 && npm start"
   },
   "forwardPorts": [
     8888
@@ -13,7 +13,7 @@
   "portsAttributes": {
     "8888": {
       "label": "Preview of Apple Pay Flow",
-      "onAutoForward": "openPreview"
+      "onAutoForward": "openBrowser"
     }
   },
   "secrets": {
@@ -27,7 +27,7 @@
     },
     "MERCHANT_ID":{
       "description": "Sandbox merchant ID of the application.",
-      "documentationUrl": "https://developer.paypal.com/dashboard/applications/sandbox"
+      "documentationUrl": "https://www.sandbox.paypal.com/businessmanage/account/aboutBusiness"
     }
   },
   "customizations": {
