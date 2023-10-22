@@ -22,13 +22,11 @@ jobs:
           dontuseforce: false
           docker_build_args: |
             NODE_ENV
-            CLIENT_ID
-            APP_SECRET
-            CLIENT_SECRET
-            MERCHANT_ID
+            PAYPAL_CLIENT_ID
+            PAYPAL_CLIENT_SECRET
+            PAYPAL_MERCHANT_ID
         env:
           NODE_ENV: staging
-          CLIENT_ID: ${{secrets.CLIENT_ID}}
-          APP_SECRET: ${{secrets.APP_SECRET}}
-          CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
-          MERCHANT_ID: ${{secrets.MERCHANT_ID}}
+          PAYPAL_CLIENT_ID: ${{secrets.CLIENT_ID}}
+          PAYPAL_CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
+          PAYPAL_MERCHANT_ID: ${{secrets.MERCHANT_ID}}

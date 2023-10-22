@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 
 // set some important variables
-const { CLIENT_ID, APP_SECRET, MERCHANT_ID } = process.env;
+const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PAYPAL_MERCHANT_ID } = process.env;
 const base = "https://api-m.sandbox.paypal.com";
 
 // call the create order method
@@ -24,7 +24,7 @@ export async function createOrder() {
             value: purchaseAmount,
           },
           payee: {
-            merchant_id: MERCHANT_ID,
+            merchant_id: PAYPAL_MERCHANT_ID,
           }
         },
       ],
@@ -51,7 +51,7 @@ export async function capturePayment(orderId) {
 
 // generate access token
 export async function generateAccessToken() {
-  const auth = Buffer.from(CLIENT_ID + ":" + APP_SECRET).toString("base64");
+  const auth = Buffer.from(PAYPAL_CLIENT_ID + ":" + PAYPAL_CLIENT_SECRET).toString("base64");
   const response = await fetch(`${base}/v1/oauth2/token`, {
     method: "post",
     body: "grant_type=client_credentials",
